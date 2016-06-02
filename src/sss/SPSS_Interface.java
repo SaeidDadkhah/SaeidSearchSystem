@@ -104,7 +104,7 @@ public class SPSS_Interface {
 
     public Document[] search(String query)
             throws Exception {
-        return spsse.search(query);
+        return spsse.luceneSearch(query);
     }
 
 }

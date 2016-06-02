@@ -2,6 +2,7 @@ package sss.engine;
 
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by Saeid Dadkhah on 2016-06-01 2:33 PM.
@@ -9,32 +10,34 @@ import java.util.Random;
  */
 public class Dictionary {
 
-	private HashMap<String, IndexInfo> hMDic;
+    private HashMap<String, Integer> hMDic;
 
-	public Dictionary() {
-		hMDic = new HashMap<>();
-	}
+    public Dictionary() {
+        hMDic = new HashMap<>();
+    }
 
-	public boolean add(String word, IndexInfo indexInfo) {
-		if (!hMDic.containsValue(indexInfo)) {
-			hMDic.put(word, indexInfo);
-			return true;
-		}
-		return false;
-	}
+    public boolean add(String word, Integer id) {
+        if (!hMDic.containsKey(word)) {
+            hMDic.put(word, id);
+            return true;
+        }
+        return false;
+    }
 
-	public IndexInfo contains(String word) {
-		return hMDic.get(word);
-	}
+    public Integer getId(String word) {
+        return hMDic.get(word);
+    }
 
-	public int genNewId(){
-		Random random = new Random();
-		return random.nextInt();
-	}
+    public int genNewId() {
+        Random random = new Random();
+        Integer rand = random.nextInt();
+        while (hMDic.containsValue(rand))
+            rand = random.nextInt();
+        return rand;
+    }
 
-	public void printAll(){
-		for(String key: hMDic.keySet())
-			System.out.println(key + ": <" + hMDic.get(key) + ">");
-	}
+    public Set<String> keySet(){
+        return hMDic.keySet();
+    }
 
 }
