@@ -1,6 +1,6 @@
-package spss.gui.component;
+package sss.gui.component;
 
-import spss.SPSS_Fields;
+import sss.SPSS_Fields;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;

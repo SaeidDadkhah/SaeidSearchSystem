@@ -1,4 +1,4 @@
-package spss;
+package sss;
 
 import org.apache.lucene.document.Document;
 
@@ -13,7 +13,7 @@ public class SPSS_Interface {
     SPSS_Engine spsse;
 
     public static void main(String[] args) {
-        System.out.println("===========((spss.SPSS_Interface TEST))===========");
+        System.out.println("===========((sss.SPSS_Interface TEST))===========");
         SPSS_Interface spss_interface = new SPSS_Interface();
         int nOfDocs = spss_interface.addDoc("./files/comp.sys.ibm.pc.hardware");
         System.out.println("docs#: " + nOfDocs);
@@ -21,7 +21,7 @@ public class SPSS_Interface {
         System.out.println("===========((Searching))===========");
         try {
             Document[] docs = spss_interface.search("X-Mailer:\"ELM\" AND body:hawk");
-//            spss.SPSS_Engine.showRes(docs);
+//            sss.SPSS_Engine.showRes(docs);
             for(Document doc: docs){
                 System.out.println(doc.get(SPSS_Fields.getName(SPSS_Fields.F_NAME_FILE_ADDRESS)));
 //                Desktop.getDesktop().open(new File(doc.get("file-address")));

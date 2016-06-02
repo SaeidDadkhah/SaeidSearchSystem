@@ -1,4 +1,4 @@
-package spss;
+package sss;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -16,8 +16,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
-import spss.engine.Dictionary;
-import spss.engine.IndexInfo;
+import sss.engine.Dictionary;
+import sss.engine.IndexInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class SPSS_Engine {
 	public static void main(String[] args) {
 		int check = MODE_INDEX;
 		if (check == MODE_LUCENE) {
-			System.out.println("===========((spss.SPSS_Engine Lucene mode test))===========");
+			System.out.println("===========((sss.SPSS_Engine Lucene mode test))===========");
 			SPSS_Engine spssEngine = new SPSS_Engine(MODE_LUCENE);
 
 			System.out.println("===========((Adding 1st doc))===========");
@@ -109,7 +109,7 @@ public class SPSS_Engine {
 				e.printStackTrace();
 			}
 		} else if (check == MODE_INDEX) {
-			System.out.println("===========((spss.SPSS_Engine Lucene mode test))===========");
+			System.out.println("===========((sss.SPSS_Engine Lucene mode test))===========");
 			SPSS_Engine spssEngine = new SPSS_Engine(MODE_INDEX);
 
 			System.out.println("===========((Adding 1st doc))===========");

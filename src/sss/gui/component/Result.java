@@ -1,11 +1,9 @@
-package spss.gui.component;
+package sss.gui.component;
 
-import spss.gui.SPSS_Results;
+import sss.gui.SPSS_Results;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**

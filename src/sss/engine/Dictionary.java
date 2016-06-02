@@ -1,4 +1,4 @@
-package spss.engine;
+package sss.engine;
 
 import java.util.HashMap;
 import java.util.Random;

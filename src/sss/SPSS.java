@@ -1,7 +1,7 @@
-package spss;
+package sss;
 
-import spss.gui.SPSS_GUI;
-import spss.gui.SplashPage;
+import sss.gui.SPSS_GUI;
+import sss.gui.SplashPage;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-14 5:19 PM.
@@ -22,7 +22,7 @@ public class SPSS {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        spssi = new spss.SPSS_Interface();
+        spssi = new sss.SPSS_Interface();
         spssi.addDoc("./files/comp.sys.ibm.pc.hardware");
         spssi.finishIndexing();
         sp.closeSP();

@@ -1,7 +1,7 @@
-package spss.gui;
+package sss.gui;
 
-import spss.SPSS_Fields;
-import spss.gui.component.Key;
+import sss.SPSS_Fields;
+import sss.gui.component.Key;
 
 import javax.swing.*;
 import java.awt.*;

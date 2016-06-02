@@ -1,4 +1,4 @@
-package spss.gui;
+package sss.gui;
 
 import javax.swing.*;
 import java.awt.*;

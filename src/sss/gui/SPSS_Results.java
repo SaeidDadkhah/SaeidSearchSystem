@@ -1,8 +1,8 @@
-package spss.gui;
+package sss.gui;
 
 import org.apache.lucene.document.Document;
-import spss.SPSS_Fields;
-import spss.gui.component.Result;
+import sss.SPSS_Fields;
+import sss.gui.component.Result;
 
 import javax.swing.*;
 import java.awt.*;
