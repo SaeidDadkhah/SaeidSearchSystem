@@ -29,6 +29,7 @@ public class Dictionary {
 
 	public int genNewId(){
 		Random random = new Random();
+		return random.nextInt();
 	}
 
 	public void printAll(){
