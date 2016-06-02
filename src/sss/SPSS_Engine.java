@@ -219,20 +219,20 @@ public class SPSS_Engine {
 		for (int i = 0; i < words.length; i++) {
 			IndexInfo ii = dictionary.contains(words[i]);
 			if (ii == null) {
-				int newId = dictionary.g
-				dictionary.add(words[i], );
-				indexInDictionary = dictionary.size() - 1;
+//				int newId = dictionary.g
+//				dictionary.add(words[i], );
+//				indexInDictionary = dictionary.size() - 1;
 			}
 			// Index
 
 
 			// Inverted Index
-			int indexInIIS = iis.indexOf(indexInDictionary);
-			if (indexInIIS == -1) { // In legend, not in words
-				iis.add(new IndexInfo(indexInDictionary, 1));
-			} else { // In words
-				iis.get(indexInIIS).increaseNum(1);
-			}
+//			int indexInIIS = iis.indexOf(indexInDictionary);
+//			if (indexInIIS == -1) { // In legend, not in words
+//				iis.add(new IndexInfo(indexInDictionary, 1));
+//			} else { // In words
+//				iis.get(indexInIIS).increaseNum(1);
+//			}
 		}
 	}
 
