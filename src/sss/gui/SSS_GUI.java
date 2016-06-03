@@ -1,7 +1,7 @@
 package sss.gui;
 
 import org.apache.lucene.document.Document;
-import sss.SPSS_Interface;
+import sss.SSS_Interface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,16 +9,16 @@ import java.awt.event.ActionEvent;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-14 5:49 PM.
- * Project: SPSS
+ * Project: SSS
  */
-public class SPSS_GUI extends JFrame {
+public class SSS_GUI extends JFrame {
 
-    private SPSS_Interface spss_interface;
-    private SPSS_MainSearch spss_mainSearch;
-    private SPSS_AdvancedSearch spss_advancedSearch;
+    private SSS_Interface SSS_interface;
+    private SSS_MainSearch SSS_mainSearch;
+    private SSS_AdvancedSearch SSS_advancedSearch;
 
-    public SPSS_GUI(SPSS_Interface spss_interface) {
-        this.spss_interface = spss_interface;
+    public SSS_GUI(SSS_Interface SSS_interface) {
+        this.SSS_interface = SSS_interface;
 
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
             if (info.getName().equals("Nimbus")) {
@@ -30,7 +30,7 @@ public class SPSS_GUI extends JFrame {
             }
         }
 
-        setTitle("SPSS®");
+        setTitle("SSS®");
         setLayout(null);
 
         Dimension ss = getToolkit().getScreenSize();
@@ -50,7 +50,7 @@ public class SPSS_GUI extends JFrame {
     public void paint(Graphics g) {
         super.paint(g);
         try {
-            spss_mainSearch.setSize(getSize());
+            SSS_mainSearch.setSize(getSize());
         } catch (NullPointerException ignored) {
         }
     }
@@ -58,31 +58,31 @@ public class SPSS_GUI extends JFrame {
     public void search(String query) {
         Document[] res = null;
         try {
-            res = spss_interface.search(query);
+            res = SSS_interface.search(query);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new SPSS_Results(res);
+        new SSS_Results(res);
     }
 
     public void turnToMain(boolean remove) {
         if (remove)
-            getContentPane().remove(spss_advancedSearch);
-        spss_mainSearch = new SPSS_MainSearch(this);
-        spss_mainSearch.setSize(getSize());
-        spss_mainSearch.setPreferredSize(getSize());
-        spss_mainSearch.setBackground(Color.WHITE);
-        spss_mainSearch.setLocation(0, 0);
-        getContentPane().add(spss_mainSearch);
+            getContentPane().remove(SSS_advancedSearch);
+        SSS_mainSearch = new SSS_MainSearch(this);
+        SSS_mainSearch.setSize(getSize());
+        SSS_mainSearch.setPreferredSize(getSize());
+        SSS_mainSearch.setBackground(Color.WHITE);
+        SSS_mainSearch.setLocation(0, 0);
+        getContentPane().add(SSS_mainSearch);
         this.dispatchEvent(new ActionEvent(this, ActionEvent.RESERVED_ID_MAX + 1, null));
     }
 
     public void turnToAdvanced() {
-        getContentPane().remove(spss_mainSearch);
-        spss_advancedSearch = new SPSS_AdvancedSearch(this);
-        spss_advancedSearch.setSize((int) getSize().getWidth() - 6, (int) getSize().getHeight() - 28);
-        spss_advancedSearch.setLocation(0, 0);
-        getContentPane().add(spss_advancedSearch);
+        getContentPane().remove(SSS_mainSearch);
+        SSS_advancedSearch = new SSS_AdvancedSearch(this);
+        SSS_advancedSearch.setSize((int) getSize().getWidth() - 6, (int) getSize().getHeight() - 28);
+        SSS_advancedSearch.setLocation(0, 0);
+        getContentPane().add(SSS_advancedSearch);
         this.dispatchEvent(new ActionEvent(this, ActionEvent.RESERVED_ID_MAX + 1, null));
     }
 

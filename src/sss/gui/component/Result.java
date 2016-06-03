@@ -1,6 +1,6 @@
 package sss.gui.component;
 
-import sss.gui.SPSS_Results;
+import sss.gui.SSS_Results;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,20 +8,20 @@ import java.awt.event.KeyListener;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-16 4:33 PM.
- * Project: SPSS
+ * Project: SSS
  */
 public class Result extends JPanel {
 
     private static final int WIDTH = 300;
     private static final int HEIGHT = 50;
 
-    private SPSS_Results spss_results;
+    private SSS_Results SSS_results;
     private KeyListener kl;
     private String docAddress;
     private String body;
 
-    public Result(SPSS_Results spss_results, KeyListener kl, String docAddress, String body) {
-        this.spss_results = spss_results;
+    public Result(SSS_Results SSS_results, KeyListener kl, String docAddress, String body) {
+        this.SSS_results = SSS_results;
         this.docAddress = docAddress;
         this.body = body;
         this.kl = kl;
@@ -83,7 +83,7 @@ public class Result extends JPanel {
                 g.drawImage(new ImageIcon("./files/open.png").getImage(), 5, 5, 40, 40, null);
             }
         };
-        bOpen.addActionListener(e -> spss_results.open(docAddress));
+        bOpen.addActionListener(e -> SSS_results.open(docAddress));
         bOpen.addKeyListener(kl);
         add(bOpen, gbc);
     }

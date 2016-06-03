@@ -5,7 +5,7 @@ import java.awt.*;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-14 5:24 PM.
- * Project: SPSS
+ * Project: SSS
  */
 public class SplashPage extends JFrame implements Runnable {
 
@@ -20,7 +20,7 @@ public class SplashPage extends JFrame implements Runnable {
     // TODO: 2016-03-14 change icon
     @Override
     public void run() {
-        setTitle("SPSS");
+        setTitle("SSS");
         setUndecorated(true);
         setLayout(null);
 

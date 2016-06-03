@@ -1,33 +1,33 @@
 package sss;
 
-import sss.gui.SPSS_GUI;
+import sss.gui.SSS_GUI;
 import sss.gui.SplashPage;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-14 5:19 PM.
- * Project: SPSS
+ * Project: SSS
  */
-public class SPSS {
+public class SSS {
 
-    private SPSS_Interface spssi;
+    private SSS_Interface spssi;
 
     public static void main(String[] args){
-        new SPSS();
+        new SSS();
     }
 
-    public SPSS(){
+    public SSS(){
         SplashPage sp = new SplashPage(500);
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        spssi = new sss.SPSS_Interface();
+        spssi = new SSS_Interface();
         spssi.addDoc("./files/comp.sys.ibm.pc.hardware");
         spssi.finishIndexing();
         sp.closeSP();
-//        SPSS_GUI spss_gui =
-                new SPSS_GUI(spssi);
+//        SSS_GUI spss_gui =
+                new SSS_GUI(spssi);
     }
 
 }

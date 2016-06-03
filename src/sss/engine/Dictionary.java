@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * Created by Saeid Dadkhah on 2016-06-01 2:33 PM.
- * Project: SPSS
+ * Project: SSS
  */
 public class Dictionary {
 

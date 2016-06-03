@@ -18,6 +18,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import sss.engine.Dictionary;
 import sss.engine.IndexInfo;
+import sss.engine.KMeans;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ import java.util.Set;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-10 5:30 PM.
- * Project: SPSS
+ * Project: SSS
  */
 
-public class SPSS_Engine {
+public class SSS_Engine {
 
     public static final int MODE_LUCENE = 0;
     public static final int MODE_INDEX = 1;
@@ -56,12 +57,13 @@ public class SPSS_Engine {
     private ArrayList<ArrayList<IndexInfo>> invertedIndex;
 
     private double[][] weightMatrix;
+    private KMeans clusters;
 
     public static void main(String[] args) {
         int check = MODE_INDEX;
         if (check == MODE_LUCENE) {
-            System.out.println("===========((sss.SPSS_Engine Lucene mode test))===========");
-            SPSS_Engine spssEngine = new SPSS_Engine(MODE_LUCENE);
+            System.out.println("===========((sss.SSS_Engine Lucene mode test))===========");
+            SSS_Engine spssEngine = new SSS_Engine(MODE_LUCENE);
 
             System.out.println("===========((Adding 1st doc))===========");
             ArrayList<String> fields = new ArrayList<>();
@@ -109,13 +111,13 @@ public class SPSS_Engine {
 
             System.out.println("===========((Start Searching))===========");
             try {
-                SPSS_Engine.showRes(spssEngine.luceneSearch("going"));
+                SSS_Engine.showRes(spssEngine.luceneSearch("going"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (check == MODE_INDEX) {
-            System.out.println("===========((sss.SPSS_Engine Lucene mode test))===========");
-            SPSS_Engine spssEngine = new SPSS_Engine(MODE_INDEX);
+            System.out.println("===========((sss.SSS_Engine Lucene mode test))===========");
+            SSS_Engine spssEngine = new SSS_Engine(MODE_INDEX);
 
             System.out.println("===========((Adding 1st doc))===========");
             try {
@@ -139,10 +141,12 @@ public class SPSS_Engine {
             ArrayList<Integer> res = spssEngine.saeidSearch("name");
             for (int i = 0; i < res.size(); i++)
                 System.out.println(i + ": " + res.get(i));
+
+            spssEngine.finishIndexing();
         }
     }
 
-    public SPSS_Engine(int mode) { // stem stop word
+    public SSS_Engine(int mode) { // stem stop word
         this.mode = mode;
         switch (mode) {
             case MODE_LUCENE:
@@ -282,6 +286,8 @@ public class SPSS_Engine {
         } else if (mode == MODE_INDEX) {
             mode = MODE_SEARCH;
             makeWeightMatrix();
+            clustering();
+            System.out.println();
         } else if (mode == MODE_SEARCH) {
         }
     }
@@ -294,6 +300,20 @@ public class SPSS_Engine {
                 weightMatrix[j][wordIndex] = wordWeightInDoc(wordIndex, j);
             }
         }
+    }
+
+    private void clustering() {
+        int[][] matrix = new int[index.size()][invertedIndex.size()];
+        for (String k : wordDictionary.keySet()) {
+            for (int j = 0; j < index.size(); j++) {
+                int wordId = wordDictionary.getId(k);
+                int wordIndexInDoc = findIndex(index.get(j), wordId);
+                if (wordIndexInDoc == -1)
+                    continue;
+                matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
+            }
+        }
+        clusters = new KMeans(matrix, (int) Math.sqrt(index.size()), 10);
     }
 
     public double wordWeightInDoc(int wordIndex, int docIndex) {

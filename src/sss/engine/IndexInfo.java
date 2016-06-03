@@ -2,7 +2,7 @@ package sss.engine;
 
 /**
  * Created by Saeid Dadkhah on 2016-06-01 2:08 AM.
- * Project: SPSS
+ * Project: SSS
  */
 public class IndexInfo {
 

@@ -1,7 +1,7 @@
 package sss.gui;
 
 import org.apache.lucene.document.Document;
-import sss.SPSS_Fields;
+import sss.SSS_Fields;
 import sss.gui.component.Result;
 
 import javax.swing.*;
@@ -14,17 +14,17 @@ import java.io.IOException;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-16 4:42 AM.
- * Project: SPSS
+ * Project: SSS
  */
-public class SPSS_Results extends JDialog {
+public class SSS_Results extends JDialog {
 
     private static final int BASE_HEIGHT = 159;
 
     private JPanel pMain;
 
-    public SPSS_Results(Document[] results) {
+    public SSS_Results(Document[] results) {
         setModal(true);
-        setTitle("SPSS®: Result");
+        setTitle("SSS®: Result");
         setIconImage(new ImageIcon("./files/mainSearch.png").getImage());
 
         setLayout(new GridBagLayout());
@@ -180,7 +180,7 @@ public class SPSS_Results extends JDialog {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
-                    SPSS_Results.this.dispose();
+                    SSS_Results.this.dispose();
             }
         });
         getContentPane().add(f, gbc);
@@ -206,13 +206,13 @@ public class SPSS_Results extends JDialog {
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
-                    SPSS_Results.this.dispose();
+                    SSS_Results.this.dispose();
             }
         };
 
         for (Document result : results) {
-            pMain.add(new Result(this, kl, result.get(SPSS_Fields.getName(SPSS_Fields.F_NAME_FILE_ADDRESS)),
-                    result.get(SPSS_Fields.getName(SPSS_Fields.F_NAME_BODY))), gbc);
+            pMain.add(new Result(this, kl, result.get(SSS_Fields.getName(SSS_Fields.F_NAME_FILE_ADDRESS)),
+                    result.get(SSS_Fields.getName(SSS_Fields.F_NAME_BODY))), gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;

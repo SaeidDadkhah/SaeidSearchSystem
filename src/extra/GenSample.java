@@ -4,7 +4,7 @@ import java.io.*;
 
 /**
  * Created by Saeid Dadkhah on 2016-06-01 1:01 AM.
- * Project: SPSS
+ * Project: SSS
  */
 public class GenSample {
 

@@ -7,19 +7,19 @@ import java.awt.event.KeyEvent;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-16 1:03 AM.
- * Project: SPSS
+ * Project: SSS
  */
-public class SPSS_MainSearch extends JPanel {
+public class SSS_MainSearch extends JPanel {
 
     private static final int MID_SIZE = 350;
 
-    private SPSS_GUI spss_gui;
+    private SSS_GUI SSS_gui;
 
     private JTextField tFQuery;
     private JButton bSearch;
 
-    public SPSS_MainSearch(SPSS_GUI spss_gui) {
-        this.spss_gui = spss_gui;
+    public SSS_MainSearch(SSS_GUI SSS_gui) {
+        this.SSS_gui = SSS_gui;
         setLayout(new GridBagLayout());
         init();
     }
@@ -179,7 +179,7 @@ public class SPSS_MainSearch extends JPanel {
         bSearch.setFont(font);
         bSearch.setForeground(bColor);
         pDown.add(bSearch, gbc);
-        bSearch.addActionListener(e -> spss_gui.search(tFQuery.getText()));
+        bSearch.addActionListener(e -> SSS_gui.search(tFQuery.getText()));
 
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -190,11 +190,11 @@ public class SPSS_MainSearch extends JPanel {
         gbc.ipadx = 0;
         gbc.ipady = 0;
         gbc.insets = new Insets(0, 5, 0, 0);
-        JButton bAdvancedSearch = new JButton("Advanced SPSS");
+        JButton bAdvancedSearch = new JButton("Advanced SSS");
         bAdvancedSearch.setFont(font);
         bAdvancedSearch.setForeground(bColor);
         pDown.add(bAdvancedSearch, gbc);
-        bAdvancedSearch.addActionListener(e -> spss_gui.turnToAdvanced());
+        bAdvancedSearch.addActionListener(e -> SSS_gui.turnToAdvanced());
 
         gbc.gridx = 3;
         gbc.gridy = 0;

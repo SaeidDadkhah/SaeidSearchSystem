@@ -1,6 +1,6 @@
 package sss.gui;
 
-import sss.SPSS_Fields;
+import sss.SSS_Fields;
 import sss.gui.component.Key;
 
 import javax.swing.*;
@@ -12,22 +12,22 @@ import java.util.ArrayList;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-16 1:03 AM.
- * Project: SPSS
+ * Project: SSS
  */
-public class SPSS_AdvancedSearch extends JPanel {
+public class SSS_AdvancedSearch extends JPanel {
 
     private static final int MAX_ROW = 14;
     private static final int MAX_COL = 5;
 
-    private SPSS_GUI spss_gui;
+    private SSS_GUI SSS_gui;
 
     private ArrayList<ArrayList<JTextField>> values;
     private ArrayList<Key> keys;
     private JButton bSearch;
     private JPanel pAtt;
 
-    public SPSS_AdvancedSearch(SPSS_GUI spss_gui) {
-        this.spss_gui = spss_gui;
+    public SSS_AdvancedSearch(SSS_GUI SSS_gui) {
+        this.SSS_gui = SSS_gui;
 
         values = new ArrayList<>();
         keys = new ArrayList<>();
@@ -112,12 +112,12 @@ public class SPSS_AdvancedSearch extends JPanel {
                 if (keys.size() == 1) {
                     // TODO: 2016-03-30 show error message
                 } else if (keys.size() == 2) {
-                    spss_gui.search(keyInfo(0));
+                    SSS_gui.search(keyInfo(0));
                 } else {
                     String query = "(" + keyInfo(0) + ")";
                     for (int i = 1; i < keys.size() - 1; i++)
                         query += ", (" + keyInfo(i) + ")";
-                    spss_gui.search(query);
+                    SSS_gui.search(query);
                 }
             } catch (Exception exc) {
                 // TODO: 2016-03-30 show error message
@@ -139,9 +139,9 @@ public class SPSS_AdvancedSearch extends JPanel {
         gbc.gridheight = 1;
         gbc.weightx = 0;
         gbc.weighty = 0;
-        JButton bMainSearch = new JButton("Main SPSS");
+        JButton bMainSearch = new JButton("Main SSS");
         add(bMainSearch, gbc);
-        bMainSearch.addActionListener(e -> spss_gui.turnToMain(true));
+        bMainSearch.addActionListener(e -> SSS_gui.turnToMain(true));
     }
 
     private void initAttPanel(JPanel pAtt) {
@@ -205,7 +205,7 @@ public class SPSS_AdvancedSearch extends JPanel {
         gbc.gridy = row;
         gbc.fill = GridBagConstraints.BOTH;
         pAtt.add(value, gbc);
-        spss_gui.dispatchEvent(new ActionEvent(this, ActionEvent.RESERVED_ID_MAX + 1, null));
+        SSS_gui.dispatchEvent(new ActionEvent(this, ActionEvent.RESERVED_ID_MAX + 1, null));
     }
 
     private boolean addKey(int row) {
@@ -228,7 +228,7 @@ public class SPSS_AdvancedSearch extends JPanel {
     private String keyInfo(int keyNum) throws Exception {
         String key = keys.get(keyNum).getText();
 
-        if (SPSS_Fields.getId(key) == -1)
+        if (SSS_Fields.getId(key) == -1)
             throw new Exception("Illegal key");
 
         if (values.get(keyNum).size() == 1)

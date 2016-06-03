@@ -2,9 +2,9 @@ package sss;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-13 2:41 PM.
- * Project: SPSS
+ * Project: SSS
  */
-public class SPSS_Fields {
+public class SSS_Fields {
 
     public static final int F_NAME_PATH = 0;
     public static final int F_NAME_FROM = 1;
@@ -289,111 +289,111 @@ public class SPSS_Fields {
     public static int getType(int id) {
         switch (id) {
             case F_NAME_PATH:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_FROM:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_NEWSGROUP:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_SUBJECT:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_MESSAGE_ID:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_XXMESSAGE_ID:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_DATE:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_XXDATE:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_ARTICLE_ID:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_ORGANIZATION:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_LINES:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_NNTP_POSTING_HOST:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_NEWREADER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_XREF:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_EXPIRES:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_DISTRIBUTION:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_KEYWORDS:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_REFERENCES:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_SENDER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_REPLY_TO:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_IN_REPLY_TO:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_FOLLOW_UP:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_FOLLOW_UPS:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_FOLLOWUP_TO:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_FOLLOWUP_TO:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_READER:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_MAILER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_SUMMARY:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_DISCLAIMER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_STANDARD_DISCLAIMER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_ORIGINATOR:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_USERAGENT:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_FTN_TO:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_AUTH_USER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_POSTED_FROM:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_NEWS_SOFTWARE:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_NEWS_SOFTWARE:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_GATED_BY:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_STATUS:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_TEL:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_APPROVED:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_RECEIVED:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_NNTP_SOFTWARE:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_POSTING_FRONT_END:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_SUBLIMINAL_MESSAGE:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_MIME_VERSION:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_CONTENT_TYPE:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_CONTENT_TRANSFER_ENCODING:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_TO:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_X_NEWS_READER:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             case F_NAME_FILE_ADDRESS:
-                return SPSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_BODY:
-                return SPSS_Engine.F_TYPE_TOKENIZE;
+                return SSS_Engine.F_TYPE_TOKENIZE;
             default:
-                return SPSS_Engine.F_TYPE_UNKNOWN;
+                return SSS_Engine.F_TYPE_UNKNOWN;
         }
     }
 
