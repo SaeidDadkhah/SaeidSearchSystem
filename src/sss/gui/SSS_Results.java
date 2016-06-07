@@ -1,7 +1,5 @@
 package sss.gui;
 
-import org.apache.lucene.document.Document;
-import sss.SSS_Fields;
 import sss.gui.component.Result;
 
 import javax.swing.*;
@@ -11,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-16 4:42 AM.
@@ -22,18 +21,13 @@ public class SSS_Results extends JDialog {
 
     private JPanel pMain;
 
-    public SSS_Results(Document[] results) {
-        setModal(true);
-        setTitle("SSS®: Result");
-        setIconImage(new ImageIcon("./files/mainSearch.png").getImage());
-
-        setLayout(new GridBagLayout());
-
+    public SSS_Results(ArrayList<String> bodies, ArrayList<String> fileAddresses) {
         init();
-        if (results.length == 0) // TODO: 2016-03-16 results should be checked with null or it's length with zero!
+
+        if (bodies.size() == 0) // TODO: 2016-03-16 results should be checked with null or it's length with zero!
             noResult();
         else
-            showResults(results);
+            showResults(bodies, fileAddresses);
         finalizePMain();
 
         setVisible(true);
@@ -62,6 +56,12 @@ public class SSS_Results extends JDialog {
     }
 
     private void init() {
+        setModal(true);
+        setTitle("SSS®: Result");
+        setIconImage(new ImageIcon("./files/mainSearch.png").getImage());
+
+        setLayout(new GridBagLayout());
+
         Dimension ss = getToolkit().getScreenSize();
         int width = 3 * (int) ss.getWidth() / 5;
         int height = BASE_HEIGHT;
@@ -179,18 +179,18 @@ public class SSS_Results extends JDialog {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                     SSS_Results.this.dispose();
             }
         });
         getContentPane().add(f, gbc);
     }
 
-    private void showResults(Document[] results) {
+    private void showResults(ArrayList<String> bodies, ArrayList<String> fileAddresses) {
         GridBagConstraints gbc = new GridBagConstraints();
 
-        setSize(getWidth(), BASE_HEIGHT + (results.length - 1) * 50);
-        setLocation(getX(), getY() - (results.length - 1) * 25);
+        setSize(getWidth(), BASE_HEIGHT + (bodies.size() - 1) * 50);
+        setLocation(getX(), getY() - (bodies.size() - 1) * 25);
         setResizable(false);
 
         gbc.gridx = 0;
@@ -205,14 +205,13 @@ public class SSS_Results extends JDialog {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                     SSS_Results.this.dispose();
             }
         };
 
-        for (Document result : results) {
-            pMain.add(new Result(this, kl, result.get(SSS_Fields.getName(SSS_Fields.F_NAME_FILE_ADDRESS)),
-                    result.get(SSS_Fields.getName(SSS_Fields.F_NAME_BODY))), gbc);
+        for (int i = 0; i < bodies.size(); i++) {
+            pMain.add(new Result(this, kl, bodies.get(i), fileAddresses.get(i)));
 
             gbc.gridx = 0;
             gbc.gridy++;

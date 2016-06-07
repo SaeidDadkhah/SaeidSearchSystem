@@ -289,111 +289,111 @@ public class SSS_Fields {
     public static int getType(int id) {
         switch (id) {
             case F_NAME_PATH:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_FROM:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_NEWSGROUP:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_SUBJECT:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_MESSAGE_ID:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_XXMESSAGE_ID:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_DATE:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_XXDATE:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_ARTICLE_ID:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_ORGANIZATION:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_LINES:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_NNTP_POSTING_HOST:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_NEWREADER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_XREF:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_EXPIRES:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_DISTRIBUTION:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_KEYWORDS:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_REFERENCES:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_SENDER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_REPLY_TO:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_IN_REPLY_TO:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_FOLLOW_UP:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_FOLLOW_UPS:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_FOLLOWUP_TO:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_FOLLOWUP_TO:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_READER:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_MAILER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_SUMMARY:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_DISCLAIMER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_STANDARD_DISCLAIMER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_ORIGINATOR:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_USERAGENT:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_FTN_TO:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_AUTH_USER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_POSTED_FROM:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_NEWS_SOFTWARE:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_NEWS_SOFTWARE:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_GATED_BY:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_STATUS:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_TEL:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_APPROVED:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_RECEIVED:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_NNTP_SOFTWARE:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_POSTING_FRONT_END:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_SUBLIMINAL_MESSAGE:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_MIME_VERSION:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_CONTENT_TYPE:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_CONTENT_TRANSFER_ENCODING:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_X_TO:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_X_NEWS_READER:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             case F_NAME_FILE_ADDRESS:
-                return SSS_Engine.F_TYPE_NOT_TOKENIZE;
+                return LuceneEngine.F_TYPE_NOT_TOKENIZE;
             case F_NAME_BODY:
-                return SSS_Engine.F_TYPE_TOKENIZE;
+                return LuceneEngine.F_TYPE_TOKENIZE;
             default:
-                return SSS_Engine.F_TYPE_UNKNOWN;
+                return LuceneEngine.F_TYPE_UNKNOWN;
         }
     }
 

@@ -47,12 +47,14 @@ public class KMeans {
                     continue;
                 }
         }
-        System.out.println("centroids!");
+//        System.out.println("centroids!");
         for (int i = 0; i < numOfClusters; i++) {
-            System.out.println(vector[i]);
+//            System.out.print(vector[i] + ": ");
             for (int j = 0; j < matrix[vector[i]].length; j++) {
                 centroids[i][j] = matrix[vector[i]][j];
+//                System.out.print(matrix[vector[i]][j] + ", ");
             }
+//            System.out.println();
         }
     }
 
