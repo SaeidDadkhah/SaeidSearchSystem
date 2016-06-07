@@ -38,7 +38,7 @@ public class LuceneEngine {
 
     public static void main(String[] args) {
         System.out.println("===========((sss.LuceneEngine Lucene mode test))===========");
-        LuceneEngine spssEngine = new LuceneEngine();
+        LuceneEngine luceneEngine = new LuceneEngine();
 
         System.out.println("===========((Adding 1st doc))===========");
         ArrayList<String> fields = new ArrayList<>();
@@ -54,7 +54,7 @@ public class LuceneEngine {
         values.add("go world");
         types.add(F_TYPE_TOKENIZE);
         try {
-            spssEngine.addDoc(fields, values, types);
+            luceneEngine.addDoc(fields, values, types);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,17 +76,17 @@ public class LuceneEngine {
         values.add("kalle zard");
         types.add(F_TYPE_NOT_TOKENIZE);
         try {
-            spssEngine.addDoc(fields, values, types);
+            luceneEngine.addDoc(fields, values, types);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         System.out.println("===========((Finishing Indexing))===========");
-        spssEngine.finishIndexing();
+        luceneEngine.finishIndexing();
 
         System.out.println("===========((Start Searching))===========");
         try {
-            LuceneEngine.showRes(spssEngine.search("going"));
+            LuceneEngine.showRes(luceneEngine.search("going"));
         } catch (Exception e) {
             e.printStackTrace();
         }

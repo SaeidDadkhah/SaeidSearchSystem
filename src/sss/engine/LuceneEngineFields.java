@@ -1,10 +1,12 @@
-package sss;
+package sss.engine;
+
+import sss.LuceneEngine;
 
 /**
  * Created by Saeid Dadkhah on 2016-03-13 2:41 PM.
  * Project: SSS
  */
-public class SSS_Fields {
+public class LuceneEngineFields {
 
     public static final int F_NAME_PATH = 0;
     public static final int F_NAME_FROM = 1;

@@ -1,6 +1,7 @@
 package sss;
 
 import org.apache.lucene.document.Document;
+import sss.engine.LuceneEngineFields;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,7 +14,11 @@ public class SSS_Interface {
 
     private static final int BUFFER_SIZE = 256 * 1024;
 
-    private LuceneEngine ssse;
+    private LuceneEngine luceneEngine;
+    private SaeidEngine saeidEngine;
+
+    private ArrayList<String> addresses;
+    private ArrayList<String> bodies;
 
     private int mode;
 
@@ -22,15 +27,15 @@ public class SSS_Interface {
         if (mode == SSS.MODE_LUCENE) {
             System.out.println("===========((sss.SSS_Interface TEST))===========");
             SSS_Interface SSS_interface = new SSS_Interface(mode);
-            int nOfDocs = SSS_interface.addDocLucene("./files/comp.sys.ibm.pc.hardware");
+            int nOfDocs = SSS_interface.addDoc("./files/comp.sys.ibm.pc.hardware");
             System.out.println("docs#: " + nOfDocs);
             SSS_interface.finishIndexing();
             System.out.println("===========((Searching))===========");
             try {
-                Document[] docs = SSS_interface.search("X-Mailer:\"ELM\" AND body:hawk");
+                SSS_interface.search("X-Mailer:\"ELM\" AND body:hawk");
                 //            sss.LuceneEngine.showRes(docs);
-                for (Document doc : docs) {
-                    System.out.println(doc.get(SSS_Fields.getName(SSS_Fields.F_NAME_FILE_ADDRESS)));
+                for (String address : SSS_interface.addresses) {
+                    System.out.println(address);
                     //                Desktop.getDesktop().open(new File(doc.get("file-address")));
                     //                ProcessBuilder pb = new ProcessBuilder("C:\\Program Files (x86)\\Sublime Text 3\\sublime_text.exe", doc.get("file-address"));
                     //                pb.start();
@@ -53,12 +58,32 @@ public class SSS_Interface {
     }
 
     public SSS_Interface(int mode) {
-        ssse = new LuceneEngine();
         this.mode = mode;
+
+        addresses = new ArrayList<>();
+        bodies = new ArrayList<>();
+
+        switch (mode) {
+            case SSS.MODE_LUCENE:
+                luceneEngine = new LuceneEngine();
+                break;
+            case SSS.MODE_INDEX:
+                saeidEngine = new SaeidEngine();
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
-    public int addDocLucene(String file) {
-        return addDocLuceneRec(new File(file));
+    public int addDoc(String file) {
+        switch (mode) {
+            case SSS.MODE_LUCENE:
+                return addDocLuceneRec(new File(file));
+            case SSS.MODE_INDEX:
+                return addDocSaeid(file);
+            default:
+                return -1;
+        }
     }
 
     private int addDocLuceneRec(File file) {
@@ -82,7 +107,7 @@ public class SSS_Interface {
                 ArrayList<String> values = new ArrayList<>();
                 ArrayList<Integer> types = new ArrayList<>();
 
-                fields.add(SSS_Fields.getName(SSS_Fields.F_NAME_FILE_ADDRESS));
+                fields.add(LuceneEngineFields.getName(LuceneEngineFields.F_NAME_FILE_ADDRESS));
                 values.add(file.getPath());
                 types.add(LuceneEngine.F_TYPE_NOT_TOKENIZE);
 
@@ -101,16 +126,16 @@ public class SSS_Interface {
                     String field = line.substring(0, index).trim().toLowerCase();
                     fields.add(field);
                     values.add(line.substring(index + 1).trim());
-                    types.add(SSS_Fields.getType(SSS_Fields.getId(field)));
+                    types.add(LuceneEngineFields.getType(LuceneEngineFields.getId(field)));
                 }
                 String body = "";
                 do {
                     body += line;
                 } while ((line = br.readLine()) != null);
-                fields.add(SSS_Fields.getName(SSS_Fields.F_NAME_BODY));
+                fields.add(LuceneEngineFields.getName(LuceneEngineFields.F_NAME_BODY));
                 values.add(body);
                 types.add(LuceneEngine.F_TYPE_TOKENIZE);
-                ssse.addDoc(fields, values, types);
+                luceneEngine.addDoc(fields, values, types);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,12 +168,12 @@ public class SSS_Interface {
                         continue;
                     System.out.println(docId);
                     System.out.println(tmp[j].substring(0, 200));
-//                    ssse.addDoc(tmp[j], docId);
+                    saeidEngine.addDoc(tmp[j], docId);
                     docId++;
                 }
                 doc = tmp[tmp.length - 1];
             }
-//            ssse.addDoc(doc, docId);
+            saeidEngine.addDoc(doc, docId);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -160,27 +185,48 @@ public class SSS_Interface {
     }
 
     public void finishIndexing() {
-        ssse.finishIndexing();
+        switch (mode) {
+            case SSS.MODE_LUCENE:
+                luceneEngine.finishIndexing();
+                break;
+            case SSS.MODE_INDEX:
+                saeidEngine.finishIndexing();
+                break;
+        }
     }
 
-    public Document[] search(String query)
-            throws Exception {
-        return ssse.search(query);
+    public void search(String query) throws Exception {
+        addresses.clear();
+        bodies.clear();
+        switch (mode) {
+            case SSS.MODE_LUCENE:
+                Document[] docs = luceneEngine.search(query);
+
+                for (Document doc : docs) {
+                    addresses.add(doc.get(LuceneEngineFields.getName(LuceneEngineFields.F_NAME_FILE_ADDRESS)));
+                    bodies.add(doc.get(LuceneEngineFields.getName(LuceneEngineFields.F_NAME_BODY)));
+                }
+                break;
+            case SSS.MODE_INDEX:
+                ArrayList<Integer> docIds = saeidEngine.search(query);
+
+                for (int i = 0; i < docIds.size(); i++) {
+
+                }
+                break;
+        }
     }
 
     public ArrayList<Integer> saeidSearch(String query) {
         return null;
     }
 
-    public String getDocName(int docId) {
-        switch (mode) {
-            case SSS.MODE_LUCENE:
-                return null;
-            case SSS.MODE_INDEX:
-                return null;
-            default:
-                return null;
-        }
+    public ArrayList<String> getAddresses() {
+        return addresses;
+    }
+
+    public ArrayList<String> getBodies() {
+        return bodies;
     }
 
 }

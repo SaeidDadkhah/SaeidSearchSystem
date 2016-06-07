@@ -26,30 +26,30 @@ public class SaeidEngine {
 
     public static void main(String[] args) {
         System.out.println("===========((sss.LuceneEngine Lucene mode test))===========");
-        SaeidEngine spssEngine = new SaeidEngine();
+        SaeidEngine saeidEngine = new SaeidEngine();
 
         System.out.println("===========((Adding 1st doc))===========");
         try {
-            spssEngine.addDoc("hello! my name is saeid! :)", 1);
-            spssEngine.addDoc("hi! his name is mostafa! :(", 2);
-            spssEngine.addDoc("hello! his name is sajjad! :|", 3);
+            saeidEngine.addDoc("hello! my name is saeid! :)", 1);
+            saeidEngine.addDoc("hi! his name is mostafa! :(", 2);
+            saeidEngine.addDoc("hello! his name is sajjad! :|", 3);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Set<String> keySet = spssEngine.wordDictionary.keySet();
+        Set<String> keySet = saeidEngine.wordDictionary.keySet();
         for (String key : keySet)
             System.out.println(key + ": <" + key + ">");
         System.out.println();
-        for (ArrayList<IndexInfo> iis : spssEngine.invertedIndex) {
+        for (ArrayList<IndexInfo> iis : saeidEngine.invertedIndex) {
             for (IndexInfo ii : iis)
                 System.out.print(ii.getId() + ": " + ii.getNum() + ", ");
             System.out.println();
         }
 
-        spssEngine.finishIndexing();
+        saeidEngine.finishIndexing();
 
         System.out.println("Searching");
-        ArrayList<Integer> res = spssEngine.search("name");
+        ArrayList<Integer> res = saeidEngine.search("name");
         for (int i = 0; i < res.size(); i++)
             System.out.println(i + ": " + res.get(i));
     }
