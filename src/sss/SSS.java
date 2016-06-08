@@ -18,8 +18,8 @@ public class SSS {
 
     public static void main(String[] args) {
         try {
-//            new SSS(MODE_INDEX, "files/Sample.txt");
-            new SSS(MODE_LUCENE, "./files/comp.sys.ibm.pc.hardware");
+            new SSS(MODE_INDEX, "files/Sample.txt");
+//            new SSS(MODE_LUCENE, "./files/comp.sys.ibm.pc.hardware");
         } catch (Exception e) {
             e.printStackTrace();
         }

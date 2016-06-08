@@ -174,7 +174,7 @@ public class SSS_Interface {
 
     private int addDocSaeid() throws Exception {
         char[] buffer = new char[BUFFER_SIZE];
-        int docId = 1;
+        int docId = 1; // TODO: 2016-06-08 this should be reformed.
 
         BufferedReader br = null;
         long ras = System.currentTimeMillis();
@@ -253,7 +253,8 @@ public class SSS_Interface {
                         br.skip(getCluster(docId) * BUFFER_SIZE);
                         br.read(buffer);
                         String[] records = new String(buffer).split(DOC_SPLITTER);
-                        bodies.add(records[getRecord(docId)].trim());
+                        int i = getRecord(docId);
+                        bodies.add(records[i].trim());
                         br.close();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
