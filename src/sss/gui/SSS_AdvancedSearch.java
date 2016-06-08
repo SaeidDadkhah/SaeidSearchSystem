@@ -1,6 +1,6 @@
 package sss.gui;
 
-import sss.SSS_Fields;
+import sss.engine.LuceneEngineFields;
 import sss.gui.component.Key;
 
 import javax.swing.*;
@@ -228,7 +228,7 @@ public class SSS_AdvancedSearch extends JPanel {
     private String keyInfo(int keyNum) throws Exception {
         String key = keys.get(keyNum).getText();
 
-        if (SSS_Fields.getId(key) == -1)
+        if (LuceneEngineFields.getId(key) == -1)
             throw new Exception("Illegal key");
 
         if (values.get(keyNum).size() == 1)

@@ -26,7 +26,7 @@ public class SaeidEngine {
 
     public static void main(String[] args) {
         System.out.println("===========((sss.LuceneEngine Lucene mode test))===========");
-        SaeidEngine saeidEngine = new SaeidEngine();
+        SaeidEngine saeidEngine = new SaeidEngine(SSS.MODE_INDEX);
 
         System.out.println("===========((Adding 1st doc))===========");
         try {
@@ -49,12 +49,18 @@ public class SaeidEngine {
         saeidEngine.finishIndexing();
 
         System.out.println("Searching");
-        ArrayList<Integer> res = saeidEngine.search("name");
+        ArrayList<Integer> res = null;
+        try {
+            res = saeidEngine.search("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < res.size(); i++)
             System.out.println(i + ": " + res.get(i));
     }
 
-    public SaeidEngine(){
+    public SaeidEngine(int mode) {
+        this.mode = mode;
         init();
     }
 
@@ -67,6 +73,8 @@ public class SaeidEngine {
     }
 
     public void addDoc(String doc, int docId) throws Exception {
+        if (mode != SSS.MODE_INDEX)
+            throw new Exception("You are not currently in index mode.");
         String[] words = doc.split("\\s+|,\\s*|\\.\\s*");
 
         indexIndex.add(new IndexInfo(docId, words.length));
@@ -102,10 +110,10 @@ public class SaeidEngine {
         }
     }
 
-    public void finishIndexing(){
-        mode = SSS.MODE_SEARCH;
+    public void finishIndexing() {
         makeWeightMatrix();
-//            clustering();
+        clustering();
+        mode = SSS.MODE_SEARCH;
     }
 
     private void makeWeightMatrix() {
@@ -150,7 +158,10 @@ public class SaeidEngine {
         return nIJ * Math.log((double) index.size() / nI) / nMaxJ;
     }
 
-    public ArrayList<Integer> search(String query) {
+    public ArrayList<Integer> search(String query) throws Exception {
+        if (mode != SSS.MODE_SEARCH)
+            throw new Exception("You are not currently in search mode.");
+
         String[] words = query.split("\\s+|,\\s*|\\.\\s*");
 
         ArrayList<Integer> result = new ArrayList<>();
@@ -171,4 +182,7 @@ public class SaeidEngine {
         return -1;
     }
 
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
 }

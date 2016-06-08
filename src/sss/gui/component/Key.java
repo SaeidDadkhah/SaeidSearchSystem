@@ -1,6 +1,6 @@
 package sss.gui.component;
 
-import sss.SSS_Fields;
+import sss.engine.LuceneEngineFields;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -32,15 +32,15 @@ public class Key extends JComboBox<String> {
         Key.this.removeAllItems();
         Key.this.addItem(typed);
 
-        for (int i = 0; i < SSS_Fields.NUM_OF_FIELDS; i++) {
-            String str = SSS_Fields.getName(i);
+        for (int i = 0; i < LuceneEngineFields.NUM_OF_FIELDS; i++) {
+            String str = LuceneEngineFields.getName(i);
             if (str != null && str.startsWith(typed)) {
-                Key.this.addItem(SSS_Fields.getName(i));
+                Key.this.addItem(LuceneEngineFields.getName(i));
             }
         }
     }
 
-    public String getText(){
+    public String getText() {
         return ((JTextComponent) getEditor().getEditorComponent()).getText();
     }
 

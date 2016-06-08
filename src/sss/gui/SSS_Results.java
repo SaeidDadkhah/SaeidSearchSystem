@@ -24,7 +24,7 @@ public class SSS_Results extends JDialog {
     public SSS_Results(ArrayList<String> bodies, ArrayList<String> fileAddresses) {
         init();
 
-        if (bodies.size() == 0) // TODO: 2016-03-16 results should be checked with null or it's length with zero!
+        if (bodies.size() == 0)
             noResult();
         else
             showResults(bodies, fileAddresses);
@@ -211,7 +211,7 @@ public class SSS_Results extends JDialog {
         };
 
         for (int i = 0; i < bodies.size(); i++) {
-            pMain.add(new Result(this, kl, bodies.get(i), fileAddresses.get(i)));
+            pMain.add(new Result(this, kl, fileAddresses.get(i), bodies.get(i)));
 
             gbc.gridx = 0;
             gbc.gridy++;

@@ -16,11 +16,8 @@ public class SSS_GUI extends JFrame {
     private SSS_MainSearch sSS_mainSearch;
     private SSS_AdvancedSearch sSS_advancedSearch;
 
-    private int mode;
-
-    public SSS_GUI(SSS_Interface sSS_interface, int mode) {
+    public SSS_GUI(SSS_Interface sSS_interface) {
         this.sSS_interface = sSS_interface;
-        this.mode = mode;
 
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
             if (info.getName().equals("Nimbus")) {
@@ -44,7 +41,7 @@ public class SSS_GUI extends JFrame {
         turnToMain(false);
 //        turnToAdvanced();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
@@ -63,7 +60,7 @@ public class SSS_GUI extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        new SSS_Results(res); todo
+        new SSS_Results(sSS_interface.getBodies(), sSS_interface.getAddresses());
     }
 
     public void turnToMain(boolean remove) {

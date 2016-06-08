@@ -15,25 +15,29 @@ public class SSS {
 
     public static final int MIN_DOC_LENGTH = 10;
     public static final int MAX_HITS = 10;
-    private SSS_Interface spssi;
 
-    public static void main(String[] args){
-        new SSS(MODE_INDEX);
+    public static void main(String[] args) {
+        try {
+//            new SSS(MODE_INDEX, "files/Sample.txt");
+            new SSS(MODE_LUCENE, "./files/comp.sys.ibm.pc.hardware");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public SSS(int mode){
+    public SSS(int mode, String fileAddress) throws Exception {
         SplashPage sp = new SplashPage(500);
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-        spssi = new SSS_Interface(MODE_INDEX);
-        spssi.addDocSaeid("files/Sample.txt");
-        spssi.finishIndexing();
+        SSS_Interface sss_interface = new SSS_Interface(fileAddress, mode);
+        sss_interface.addDoc();
+        sss_interface.finishIndexing();
         sp.closeSP();
 //        SSS_GUI spss_gui =
-                new SSS_GUI(spssi, mode);
+        new SSS_GUI(sss_interface);
     }
 
 }

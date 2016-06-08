@@ -44,7 +44,6 @@ public class KMeans {
                 if (vector[j] == vector[i]) {
                     vector[i] = random.nextInt(matrix.length);
                     j = -1;
-                    continue;
                 }
         }
 //        System.out.println("centroids!");
@@ -66,39 +65,45 @@ public class KMeans {
         int[] clusterNum = new int[matrix.length];
         int[] numOfFollowers = new int[numOfClusters];
         // Set centroids
-        for (int j = 0; j < matrix.length; j++) { // Docs loop
-            double d = Double.MAX_VALUE;
-            for (int k = 0; k < numOfClusters; k++) { // Centroids loop
-                double tmp = 0;
-                for (int l = 0; l < matrix[j].length; l++) { // Dimensions loop
-                    tmp += Math.pow(matrix[j][l] - centroids[k][l], 2);
-                }
-                if (tmp < d) {
-                    d = tmp;
-                    clusterNum[j] = k;
-                }
-            }
+        for (int i = 0; i < matrix.length; i++) { // Docs loop
+            clusterNum[i] = closestCentroid(matrix[i]);
         }
 
         // Update centroids
         // Set centroids and number of their followers to zero initially.
-        for (int j = 0; j < numOfClusters; j++) { // Centroids loop
-            numOfFollowers[j] = 0;
-            for (int k = 0; k < centroids[j].length; k++) // Dimensions loop
-                centroids[j][k] = 0;
+        for (int i = 0; i < numOfClusters; i++) { // Centroids loop
+            numOfFollowers[i] = 0;
+            for (int j = 0; j < centroids[i].length; j++) // Dimensions loop
+                centroids[i][j] = 0;
         }
-        for (int j = 0; j < matrix.length; j++) { // Docs loop
-            numOfFollowers[clusterNum[j]] += 1;
-            for (int k = 0; k < matrix[j].length; k++) { // Dimensions loop
-                centroids[clusterNum[j]][k] += matrix[j][k];
+        for (int i = 0; i < matrix.length; i++) { // Docs loop
+            numOfFollowers[clusterNum[i]] += 1;
+            for (int j = 0; j < matrix[i].length; j++) { // Dimensions loop
+                centroids[clusterNum[i]][j] += matrix[i][j];
             }
         }
         // Calculate Average
-        for (int j = 0; j < centroids.length; j++) {
-            for (int k = 0; k < centroids[j].length; k++) {
-                centroids[j][k] /= numOfFollowers[j];
+        for (int i = 0; i < centroids.length; i++) {
+            for (int j = 0; j < centroids[i].length; j++) {
+                centroids[i][j] /= numOfFollowers[i];
             }
         }
+    }
+
+    public int closestCentroid(int[] vector){
+        int centroid = -1;
+        double d = Double.MAX_VALUE;
+        for (int i = 0; i < numOfClusters; i++) { // Centroids loop
+            double tmp = 0;
+            for (int j = 0; j < vector.length; j++) { // Dimensions loop
+                tmp += Math.pow(vector[j] - centroids[i][j], 2);
+            }
+            if (tmp < d) {
+                d = tmp;
+                centroid = i;
+            }
+        }
+        return centroid;
     }
 
 }
