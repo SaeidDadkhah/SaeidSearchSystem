@@ -211,7 +211,7 @@ public class SSS_Results extends JDialog {
         };
 
         for (int i = 0; i < bodies.size(); i++) {
-            pMain.add(new Result(this, kl, fileAddresses.get(i), bodies.get(i)));
+            pMain.add(new Result(this, kl, fileAddresses.get(i), bodies.get(i)), gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;
