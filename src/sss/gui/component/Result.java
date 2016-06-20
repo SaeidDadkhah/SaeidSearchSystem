@@ -65,7 +65,7 @@ public class Result extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.BOTH;
-        add(new JLabel(body.substring(41)), gbc);
+        add(new JLabel(body.substring(41, 82)), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 0;

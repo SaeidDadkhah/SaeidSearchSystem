@@ -27,11 +27,11 @@ public class SSS_Interface {
 
     @SuppressWarnings("ConstantConditions")
     public static void main(String[] args) {
-        int mode = SSS.MODE_LUCENE;
+        int mode = SSS.MODE_INDEX;
         if (mode == SSS.MODE_LUCENE) {
             System.out.println("===========((sss.SSS_Interface TEST))===========");
             SSS_Interface SSS_interface = new SSS_Interface("./files/comp.sys.ibm.pc.hardware", mode);
-            int nOfDocs = 0;
+            int nOfDocs;
             try {
                 nOfDocs = SSS_interface.addDoc();
             } catch (Exception e) {
@@ -58,7 +58,7 @@ public class SSS_Interface {
         } else if (mode == SSS.MODE_INDEX) {
             System.out.println("===========((sss.SSS_Interface TEST))===========");
             SSS_Interface sSS_interface = new SSS_Interface("./files/Sample.txt", mode);
-            int nOfDocs = 0;
+            int nOfDocs;
             try {
                 nOfDocs = sSS_interface.addDocSaeid();
             } catch (Exception e) {
@@ -69,7 +69,16 @@ public class SSS_Interface {
             sSS_interface.finishIndexing();
             System.out.println("===========((Searching))===========");
             try {
-                sSS_interface.search("زرادخانه");
+                sSS_interface.search("شهادت");
+                System.out.println(sSS_interface.getBodies().get(0).substring(0, 200));
+                sSS_interface.search("ژوزه");
+                System.out.println(sSS_interface.getBodies().get(0).substring(0, 200));
+                sSS_interface.search("فجر");
+                System.out.println(sSS_interface.getBodies().get(0).substring(0, 200));
+                sSS_interface.search("روانمايه");
+                System.out.println(sSS_interface.getBodies().get(0).substring(0, 200));
+                sSS_interface.search("رانه");
+                System.out.println(sSS_interface.getBodies().get(0).substring(0, 200));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -173,8 +182,8 @@ public class SSS_Interface {
     }
 
     private int addDocSaeid() throws Exception {
+        int numOfDocs = 0;
         char[] buffer = new char[BUFFER_SIZE];
-        int docId = 1; // TODO: 2016-06-08 this should be reformed.
 
         BufferedReader br = null;
         long ras = System.currentTimeMillis();
@@ -185,22 +194,33 @@ public class SSS_Interface {
         }
         assert br != null;
         String doc = "";
+        int cluster = 0;
+        int j = 0;
         while (br.ready()) {
             br.read(buffer);
             doc += new String(buffer);
             String[] tmp = doc.split(DOC_SPLITTER);
-            for (int j = 0; j < tmp.length - 1; j++) {
+            if (tmp.length > 1 && cluster > 0) {
+                tmp[0] = tmp[0].trim();
+                System.out.println(getId(cluster - 1, j));
+                System.out.println(tmp[0].substring(0, 200));
+                saeidEngine.addDoc(tmp[0], getId(cluster - 1, j));
+                numOfDocs++;
+            }
+            for (j = 1; j < tmp.length - 1; j++) {
                 tmp[j] = tmp[j].trim();
-                if (tmp[j].length() < SSS.MIN_DOC_LENGTH)
-                    continue;
-                System.out.println(docId);
+//                if (tmp[j].length() < SSS.MIN_DOC_LENGTH)
+//                    continue;
+                System.out.println(getId(cluster, j));
                 System.out.println(tmp[j].substring(0, 200));
-                saeidEngine.addDoc(tmp[j], docId);
-                docId++;
+                saeidEngine.addDoc(tmp[j], getId(cluster, j));
+                numOfDocs++;
             }
             doc = tmp[tmp.length - 1];
+            cluster++;
         }
-        saeidEngine.addDoc(doc, docId);
+        saeidEngine.addDoc(doc, getId(cluster, 0));
+        numOfDocs++;
         long rae = System.currentTimeMillis();
         System.out.println("read and add time: " + (rae - ras));
         try {
@@ -208,7 +228,7 @@ public class SSS_Interface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return docId;
+        return numOfDocs;
     }
 
     public void finishIndexing() {
@@ -240,10 +260,8 @@ public class SSS_Interface {
                 }
                 break;
             case SSS.MODE_SEARCH:
-                addresses.clear();
-                bodies.clear();
-
                 ArrayList<Integer> docIds = saeidEngine.search(query);
+
                 char[] buffer = new char[BUFFER_SIZE];
 
                 for (Integer docId : docIds)
@@ -254,7 +272,12 @@ public class SSS_Interface {
                         br.read(buffer);
                         String[] records = new String(buffer).split(DOC_SPLITTER);
                         int i = getRecord(docId);
-                        bodies.add(records[i].trim());
+                        if (i < records.length - 1)
+                            bodies.add(records[i].trim());
+                        else {
+                            br.read(buffer);
+                            bodies.add((records[i] + new String(buffer).split(DOC_SPLITTER)[0]).trim());
+                        }
                         br.close();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -271,6 +294,10 @@ public class SSS_Interface {
 
     public ArrayList<String> getBodies() {
         return bodies;
+    }
+
+    private int getId(int cluster, int record) {
+        return cluster * ((int) Math.pow(10, RECORD_DIGITS_IN_ID)) + record;
     }
 
     private int getCluster(int id) {

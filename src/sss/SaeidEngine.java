@@ -1,8 +1,6 @@
 package sss;
 
-import sss.engine.Dictionary;
-import sss.engine.IndexInfo;
-import sss.engine.KMeans;
+import sss.engine.*;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -19,6 +17,7 @@ public class SaeidEngine {
     private ArrayList<IndexInfo> invertedIndexIndex;
     private ArrayList<ArrayList<IndexInfo>> invertedIndex;
 
+    private PersianStopWords persianStopWords;
     private KMeans clusters;
 
     private double[][] weightMatrix;
@@ -55,6 +54,7 @@ public class SaeidEngine {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        assert res != null;
         for (int i = 0; i < res.size(); i++)
             System.out.println(i + ": " + res.get(i));
     }
@@ -70,17 +70,21 @@ public class SaeidEngine {
         indexIndex = new ArrayList<>();
         invertedIndex = new ArrayList<>();
         invertedIndexIndex = new ArrayList<>();
+
+        persianStopWords = new PersianStopWords();
     }
 
     public void addDoc(String doc, int docId) throws Exception {
         if (mode != SSS.MODE_INDEX)
             throw new Exception("You are not currently in index mode.");
-        String[] words = doc.split("\\s+|,\\s*|\\.\\s*");
+        String[] words = doc.split("\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+");
 
         indexIndex.add(new IndexInfo(docId, words.length));
         ArrayList<IndexInfo> iis = new ArrayList<>();
         index.add(iis);
         for (String word : words) {
+            if (persianStopWords.isStopWord(word))
+                continue;
             Integer wordId = wordDictionary.getId(word);
             // Add to dictionary if it doesn't exist.
             if (wordId == null) {
@@ -166,6 +170,8 @@ public class SaeidEngine {
 
         ArrayList<Integer> result = new ArrayList<>();
         for (String word : words) {
+            if (persianStopWords.isStopWord(word))
+                continue;
             int wordIndex = findIndex(invertedIndexIndex, wordDictionary.getId(word));
             if (wordIndex != -1) {
                 for (int j = 0; j < invertedIndex.get(wordIndex).size(); j++)
