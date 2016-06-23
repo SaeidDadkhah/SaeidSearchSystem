@@ -14,6 +14,7 @@ public class SaeidEngine {
     private Dictionary wordDictionary;
     private ArrayList<IndexInfo> indexIndex;
     private ArrayList<ArrayList<IndexInfo>> index;
+    private ArrayList<Integer> documentClass;
     private ArrayList<IndexInfo> invertedIndexIndex;
     private ArrayList<ArrayList<IndexInfo>> invertedIndex;
 
@@ -23,40 +24,48 @@ public class SaeidEngine {
     private double[][] weightMatrix;
     private int mode;
 
+    @SuppressWarnings("ConstantConditions")
     public static void main(String[] args) {
-        System.out.println("===========((sss.LuceneEngine Lucene mode test))===========");
-        SaeidEngine saeidEngine = new SaeidEngine(SSS.MODE_INDEX);
+        int mode = SSS.MODE_INDEX_20_NEWS_GROUPS;
+        if (mode == SSS.MODE_INDEX_ONE_FILE) {
+            System.out.println("===========((sss.SaeidEngine Index one file mode test))===========");
+            SaeidEngine saeidEngine = new SaeidEngine(SSS.MODE_INDEX_ONE_FILE);
 
-        System.out.println("===========((Adding 1st doc))===========");
-        try {
-            saeidEngine.addDoc("hello! my name is saeid! :)", 1);
-            saeidEngine.addDoc("hi! his name is mostafa! :(", 2);
-            saeidEngine.addDoc("hello! his name is sajjad! :|", 3);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Set<String> keySet = saeidEngine.wordDictionary.keySet();
-        for (String key : keySet)
-            System.out.println(key + ": <" + key + ">");
-        System.out.println();
-        for (ArrayList<IndexInfo> iis : saeidEngine.invertedIndex) {
-            for (IndexInfo ii : iis)
-                System.out.print(ii.getId() + ": " + ii.getNum() + ", ");
+            System.out.println("===========((Adding docs))===========");
+            try {
+                saeidEngine.addDoc("hello! my name is saeid! :)", 1, 1);
+                saeidEngine.addDoc("hi! his name is mostafa! :(", 2, 1);
+                saeidEngine.addDoc("hello! his name is sajjad! :|", 3, 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Set<String> keySet = saeidEngine.wordDictionary.keySet();
+            for (String key : keySet)
+                System.out.println(key + ": <" + key + ">");
             System.out.println();
-        }
+            for (ArrayList<IndexInfo> iis : saeidEngine.invertedIndex) {
+                for (IndexInfo ii : iis)
+                    System.out.print(ii.getId() + ": " + ii.getNum() + ", ");
+                System.out.println();
+            }
 
-        saeidEngine.finishIndexing();
+            saeidEngine.finishIndexing();
 
-        System.out.println("Searching");
-        ArrayList<Integer> res = null;
-        try {
-            res = saeidEngine.search("name");
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Searching");
+            ArrayList<Integer> res = null;
+            try {
+                res = saeidEngine.search("name");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            assert res != null;
+            for (int i = 0; i < res.size(); i++)
+                System.out.println(i + ": " + res.get(i));
+        } else if (mode == SSS.MODE_INDEX_20_NEWS_GROUPS) {
+            System.out.println("===========((sss.SaeidEngine Index one file mode test))===========");
+            SaeidEngine saeidEngine = new SaeidEngine(SSS.MODE_INDEX_ONE_FILE);
+
         }
-        assert res != null;
-        for (int i = 0; i < res.size(); i++)
-            System.out.println(i + ": " + res.get(i));
     }
 
     public SaeidEngine(int mode) {
@@ -68,18 +77,20 @@ public class SaeidEngine {
         wordDictionary = new Dictionary();
         index = new ArrayList<>();
         indexIndex = new ArrayList<>();
+        documentClass = new ArrayList<>();
         invertedIndex = new ArrayList<>();
         invertedIndexIndex = new ArrayList<>();
 
         persianStopWords = new PersianStopWords();
     }
 
-    public void addDoc(String doc, int docId) throws Exception {
-        if (mode != SSS.MODE_INDEX)
+    public void addDoc(String doc, int docId, int documentClass) throws Exception {
+        if (mode != SSS.MODE_INDEX_ONE_FILE)
             throw new Exception("You are not currently in index mode.");
         String[] words = doc.split("\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+");
 
         indexIndex.add(new IndexInfo(docId, words.length));
+        this.documentClass.add(documentClass);
         ArrayList<IndexInfo> iis = new ArrayList<>();
         index.add(iis);
         for (String word : words) {
@@ -130,20 +141,6 @@ public class SaeidEngine {
         }
     }
 
-    private void clustering() {
-        int[][] matrix = new int[index.size()][invertedIndex.size()];
-        for (String k : wordDictionary.keySet()) {
-            for (int j = 0; j < index.size(); j++) {
-                int wordId = wordDictionary.getId(k);
-                int wordIndexInDoc = findIndex(index.get(j), wordId);
-                if (wordIndexInDoc == -1)
-                    continue;
-                matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
-            }
-        }
-        clusters = new KMeans(matrix, (int) Math.sqrt(index.size()), 10);
-    }
-
     public double wordWeightInDoc(int wordIndex, int docIndex) {
         int docId = indexIndex.get(docIndex).getId();
         int docIndexInWord = findIndex(invertedIndex.get(wordIndex), docId);
@@ -162,22 +159,61 @@ public class SaeidEngine {
         return nIJ * Math.log((double) index.size() / nI) / nMaxJ;
     }
 
+    private void clustering() {
+        /*
+        int[][] matrix = new int[index.size()][invertedIndex.size()];
+        for (String k : wordDictionary.keySet()) {
+            for (int j = 0; j < index.size(); j++) {
+                int wordId = wordDictionary.getId(k);
+                int wordIndexInDoc = findIndex(index.get(j), wordId);
+                if (wordIndexInDoc == -1)
+                    continue;
+                matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
+            }
+        }
+        */
+        clusters = new KMeans(weightMatrix, (int) Math.sqrt(index.size()), 10);
+    }
+
     public ArrayList<Integer> search(String query) throws Exception {
         if (mode != SSS.MODE_SEARCH)
             throw new Exception("You are not currently in search mode.");
 
+        // Making vector
         String[] words = query.split("\\s+|,\\s*|\\.\\s*");
 
-        ArrayList<Integer> result = new ArrayList<>();
+        double[] vector = new double[invertedIndexIndex.size()];
         for (String word : words) {
             if (persianStopWords.isStopWord(word))
                 continue;
             int wordIndex = findIndex(invertedIndexIndex, wordDictionary.getId(word));
             if (wordIndex != -1) {
-                for (int j = 0; j < invertedIndex.get(wordIndex).size(); j++)
-                    result.add(invertedIndex.get(wordIndex).get(j).getId());
+                vector[wordIndex] += 1;
             }
         }
+
+        ArrayList<Integer> indices = clusters.getDocs(vector);
+
+        // Sorting result
+        ArrayList<Double> scores = new ArrayList<>();
+        ArrayList<Integer> secondIndices = new ArrayList<>();
+        double score;
+        for (int i = 0; i < indices.size(); i++) {
+            score = 0;
+            for (int j = 0; j < vector.length; j++)
+                score += vector[j] * weightMatrix[i][j];
+            score = score / indexIndex.get(indices.get(i)).getNum();
+            int j = 0;
+            while (j < scores.size() && scores.get(j) > score)
+                j++;
+            scores.add(j, score);
+            secondIndices.add(j, indices.get(i));
+        }
+
+        // Index to id
+        ArrayList<Integer> result = new ArrayList<>();
+        for (Integer index : secondIndices)
+            result.add(indexIndex.get(index).getId());
         return result;
     }
 

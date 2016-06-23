@@ -10,18 +10,19 @@ import sss.gui.SplashPage;
 public class SSS {
 
     public static final int MODE_LUCENE = 0;
-    public static final int MODE_INDEX = 1;
-    public static final int MODE_SEARCH = 2;
+    public static final int MODE_INDEX_ONE_FILE = 1;
+    public static final int MODE_INDEX_20_NEWS_GROUPS = 2;
+    public static final int MODE_SEARCH = 3;
 
     public static final int MAX_HITS = 10;
 
     public static void main(String[] args) {
         try {
             if (args.length == 0)
-                new SSS(MODE_INDEX, "files/Sample.txt");
+                new SSS(MODE_INDEX_ONE_FILE, "files/Sample.txt");
             else if (args.length == 1)
-                new SSS(MODE_INDEX, args[0]);
-//            new SSS(MODE_LUCENE, "./files/comp.sys.ibm.pc.hardware");
+                new SSS(MODE_INDEX_ONE_FILE, args[0]);
+//            new SSS(MODE_LUCENE, "./files/20_newsgroups/comp.sys.ibm.pc.hardware");
         } catch (Exception e) {
             e.printStackTrace();
         }

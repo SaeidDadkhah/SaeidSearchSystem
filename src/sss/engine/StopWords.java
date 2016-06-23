@@ -5,18 +5,24 @@ import java.util.*;
 
 public class StopWords {
 
+    /*
     public static final int M_HASH_SET = 0;
     public static final int M_TREE_SET = 1;
     public static final int M_LINKED_HASH_SET = 2;
     public static final int M_HASH_MAP = 3;
     public static final int M_ARRAY_LIST = 4;
     private int mode;
+    */
 
     private Set<String> set;
+    /*
     private HashMap<String, Integer> hashMap;
     private ArrayList<String> arrayList;
+    */
 
+    /*
     private Random rand;
+    */
 
     public static void main(String[] args) {
         for (int i = 0; i < 5; i++) {
@@ -28,7 +34,8 @@ public class StopWords {
                 e.printStackTrace();
             }
 
-            StopWords psw = new StopWords(M_HASH_SET);
+            StopWords psw = new StopWords();
+            //(M_HASH_SET);
 
             long start = System.currentTimeMillis();
             int num = 0;
@@ -42,6 +49,7 @@ public class StopWords {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.println(num);
 
 //        psw.printAll();
 
@@ -78,12 +86,16 @@ public class StopWords {
         }
     }
 
-    public StopWords(int mode) {
+    public StopWords() {
+        //(int mode) {
+        /*
         this.mode = mode;
 
         switch (mode) {
             case M_HASH_SET:
-                set = new HashSet<>();
+            */
+        set = new HashSet<>();
+        /*
                 break;
             case M_TREE_SET:
                 set = new TreeSet<>();
@@ -102,17 +114,21 @@ public class StopWords {
         }
 
         rand = new Random();
+        */
     }
 
     public boolean addStopWord(String stopWord) {
+        /*
         switch (mode) {
             case M_HASH_SET:
             case M_TREE_SET:
             case M_LINKED_HASH_SET:
-                if (set.contains(stopWord))
-                    return false;
-                set.add(stopWord);
-                return true;
+            */
+        if (set.contains(stopWord))
+            return false;
+        set.add(stopWord);
+        return true;
+        /*
             case M_HASH_MAP:
                 if (hashMap.containsValue(stopWord))
                     return false;
@@ -126,14 +142,18 @@ public class StopWords {
             default:
                 return false;
         }
+        */
     }
 
     public boolean isStopWord(String word) {
+        /*
         switch (mode) {
             case M_HASH_SET:
             case M_TREE_SET:
             case M_LINKED_HASH_SET:
-                return set.contains(word);
+           */
+        return set.contains(word);
+        /*
             case M_HASH_MAP:
                 return hashMap.containsKey(word);
             case M_ARRAY_LIST:
@@ -141,10 +161,11 @@ public class StopWords {
             default:
                 return false;
         }
+        */
     }
 
 	/*
-	public void printAll() {
+    public void printAll() {
 		switch (mode) {
 			case M_HASH_SET:
 			case M_TREE_SET:

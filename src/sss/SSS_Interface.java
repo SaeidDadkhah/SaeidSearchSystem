@@ -27,10 +27,13 @@ public class SSS_Interface {
 
     @SuppressWarnings("ConstantConditions")
     public static void main(String[] args) {
-        int mode = SSS.MODE_INDEX;
+        int mode = SSS.MODE_INDEX_20_NEWS_GROUPS;
+//        String fileAddress = "./files/20_newsgroups/comp.sys.ibm.pc.hardware"; // for SSS.MODE_LUCENE
+//        String fileAddress = "./files/Sample.txt";  // for SSS.MODE_INDEX_ONE_FILE
+        String fileAddress = "./files/20_newsgroups"; // for SSS.MODE_INDEX_20_NEWS_GROUPS
         if (mode == SSS.MODE_LUCENE) {
             System.out.println("===========((sss.SSS_Interface TEST))===========");
-            SSS_Interface SSS_interface = new SSS_Interface("./files/comp.sys.ibm.pc.hardware", mode);
+            SSS_Interface SSS_interface = new SSS_Interface(fileAddress, mode);
             int nOfDocs;
             try {
                 nOfDocs = SSS_interface.addDoc();
@@ -55,12 +58,12 @@ public class SSS_Interface {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (mode == SSS.MODE_INDEX) {
+        } else if (mode == SSS.MODE_INDEX_ONE_FILE) {
             System.out.println("===========((sss.SSS_Interface TEST))===========");
-            SSS_Interface sSS_interface = new SSS_Interface("./files/Sample.txt", mode);
+            SSS_Interface sSS_interface = new SSS_Interface(fileAddress, mode);
             int nOfDocs;
             try {
-                nOfDocs = sSS_interface.addDocSaeid();
+                nOfDocs = sSS_interface.addDocSaeidOneFile();
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
@@ -82,7 +85,22 @@ public class SSS_Interface {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+        } else if (mode == SSS.MODE_INDEX_20_NEWS_GROUPS) {
+            System.out.println("===========((sss.SSS_Interface TEST))===========");
+            SSS_Interface sSS_interface = new SSS_Interface(fileAddress, mode);
+            int nOfDocs;
+            try {
+                long s = System.currentTimeMillis();
+                nOfDocs = sSS_interface.addDocSaeid20NewsGroups(new File(fileAddress), 0);
+                long e = System.currentTimeMillis();
+                System.out.println("t: " + (e - s));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+            System.out.println("docs#: " + nOfDocs);
+            sSS_interface.finishIndexing();
+            System.out.println("===========((Searching))===========");
         }
     }
 
@@ -98,7 +116,11 @@ public class SSS_Interface {
                 luceneEngine = new LuceneEngine();
                 saeidEngine = null;
                 break;
-            case SSS.MODE_INDEX:
+            case SSS.MODE_INDEX_ONE_FILE:
+                luceneEngine = null;
+                saeidEngine = new SaeidEngine(mode);
+                break;
+            case SSS.MODE_INDEX_20_NEWS_GROUPS:
                 luceneEngine = null;
                 saeidEngine = new SaeidEngine(mode);
                 break;
@@ -111,8 +133,10 @@ public class SSS_Interface {
         switch (mode) {
             case SSS.MODE_LUCENE:
                 return addDocLuceneRec(new File(fileAddress));
-            case SSS.MODE_INDEX:
-                return addDocSaeid();
+            case SSS.MODE_INDEX_ONE_FILE:
+                return addDocSaeidOneFile();
+            case SSS.MODE_INDEX_20_NEWS_GROUPS:
+                return addDocSaeid20NewsGroups(new File(fileAddress), 0);
             default:
                 return -1;
         }
@@ -181,7 +205,7 @@ public class SSS_Interface {
         }
     }
 
-    private int addDocSaeid() throws Exception {
+    private int addDocSaeidOneFile() throws Exception {
         int numOfDocs = 0;
         char[] buffer = new char[BUFFER_SIZE];
 
@@ -204,7 +228,7 @@ public class SSS_Interface {
                 tmp[0] = tmp[0].trim();
                 System.out.println(getId(cluster - 1, j));
                 System.out.println(tmp[0].substring(0, 200));
-                saeidEngine.addDoc(tmp[0], getId(cluster - 1, j));
+                saeidEngine.addDoc(tmp[0], getId(cluster - 1, j), 0);
                 numOfDocs++;
             }
             for (j = 1; j < tmp.length - 1; j++) {
@@ -213,13 +237,13 @@ public class SSS_Interface {
 //                    continue;
                 System.out.println(getId(cluster, j));
                 System.out.println(tmp[j].substring(0, 200));
-                saeidEngine.addDoc(tmp[j], getId(cluster, j));
+                saeidEngine.addDoc(tmp[j], getId(cluster, j), 0);
                 numOfDocs++;
             }
             doc = tmp[tmp.length - 1];
             cluster++;
         }
-        saeidEngine.addDoc(doc, getId(cluster, 0));
+        saeidEngine.addDoc(doc, getId(cluster, 0), 0);
         numOfDocs++;
         long rae = System.currentTimeMillis();
         System.out.println("read and add time: " + (rae - ras));
@@ -231,13 +255,62 @@ public class SSS_Interface {
         return numOfDocs;
     }
 
+    private int addDocSaeid20NewsGroups(File file, int documentClass) {
+        if (file.isDirectory()) {
+            File[] subFiles = file.listFiles();
+            int numOfDirs = 0;
+            assert subFiles != null;
+            for (File f : subFiles)
+                if (f.isDirectory())
+                    numOfDirs++;
+            if (numOfDirs > 0) {
+                double dt = Math.pow(10, Math.log10(numOfDirs));
+                int tmp = (int) dt;
+                documentClass = documentClass * tmp;
+            }
+            int res = 0;
+            for (File f : subFiles) {
+                if (f.isDirectory())
+                    documentClass++;
+                res += addDocSaeid20NewsGroups(f, documentClass);
+            }
+            return res;
+        }
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String line;
+            assert br != null;
+
+            do {
+                line = br.readLine();
+            } while (line != null && line.length() != 0);
+
+            String body = "";
+            while ((line = br.readLine()) != null)
+                body += line;
+
+            saeidEngine.addDoc(body, Integer.parseInt(file.getName()), documentClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 1;
+    }
+
     public void finishIndexing() {
         long fis = System.currentTimeMillis();
         switch (mode) {
             case SSS.MODE_LUCENE:
                 luceneEngine.finishIndexing();
                 break;
-            case SSS.MODE_INDEX:
+            case SSS.MODE_INDEX_ONE_FILE:
                 saeidEngine.finishIndexing();
                 saeidEngine.setMode(SSS.MODE_SEARCH);
                 mode = SSS.MODE_SEARCH;

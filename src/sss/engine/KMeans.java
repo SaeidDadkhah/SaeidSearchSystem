@@ -1,5 +1,6 @@
 package sss.engine;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -8,13 +9,14 @@ import java.util.Random;
  */
 public class KMeans {
 
-    private int[][] matrix;
+    private double[][] matrix;
+    private int[] clusterNum;
     private int numOfClusters;
 
     private double[][] centroids;
 
     public static void main(String[] args) {
-        int[][] matrix = {{0, 0}, {0, 1}, {1, 0}, {1, 1}, {10, 10}, {10, 9}, {9, 10}, {9, 9}};
+        double[][] matrix = {{0, 0}, {0, 1}, {1, 0}, {1, 1}, {10, 10}, {10, 9}, {9, 10}, {9, 9}};
         KMeans kMeans = new KMeans(matrix, 2, 10);
         for (double[] c : kMeans.centroids) {
             for (double d : c)
@@ -23,19 +25,23 @@ public class KMeans {
         }
     }
 
-    public KMeans(int[][] matrix, int numOfClusters, int firstIterations) {
+    public KMeans(double[][] matrix, int numOfClusters, int firstIterations) {
         if (matrix.length == 0)
             throw new IllegalArgumentException();
         this.matrix = matrix;
         this.numOfClusters = numOfClusters;
 
         initCentroids();
-        for (int i = 0; i < firstIterations; i++)
-            setAndUpdateCentroids();
+        setCentroids();
+        for (int i = 0; i < firstIterations; i++) {
+            updateCentroids();
+            setCentroids();
+        }
     }
 
     private void initCentroids() {
         centroids = new double[numOfClusters][matrix[0].length];
+        clusterNum = new int[matrix.length];
         Random random = new Random();
         int vector[] = new int[numOfClusters];
         for (int i = 0; i < numOfClusters; i++) {
@@ -46,30 +52,34 @@ public class KMeans {
                     j = -1;
                 }
         }
-//        System.out.println("centroids!");
+
         for (int i = 0; i < numOfClusters; i++) {
-//            System.out.print(vector[i] + ": ");
-            for (int j = 0; j < matrix[vector[i]].length; j++) {
-                centroids[i][j] = matrix[vector[i]][j];
-//                System.out.print(matrix[vector[i]][j] + ", ");
-            }
-//            System.out.println();
+            System.arraycopy(matrix[vector[i]], 0, centroids[i], 0, matrix[vector[i]].length);
         }
+//        System.out.println("centroids!");
+//        for (int i = 0; i < numOfClusters; i++) {
+//            System.out.print(vector[i] + ": ");
+//            for (int j = 0; j < matrix[vector[i]].length; j++) {
+//                centroids[i][j] = matrix[vector[i]][j];
+//                System.out.print(matrix[vector[i]][j] + ", ");
+//            }
+//            System.out.println();
+//        }
     }
 
     public void update() {
-        setAndUpdateCentroids();
+        updateCentroids();
+        setCentroids();
     }
 
-    private void setAndUpdateCentroids() {
-        int[] clusterNum = new int[matrix.length];
-        int[] numOfFollowers = new int[numOfClusters];
-        // Set centroids
-        for (int i = 0; i < matrix.length; i++) { // Docs loop
+    private void setCentroids(){
+        for (int i = 0; i < matrix.length; i++)
             clusterNum[i] = closestCentroid(matrix[i]);
-        }
+    }
 
-        // Update centroids
+    private void updateCentroids() {
+        int[] numOfFollowers = new int[numOfClusters];
+
         // Set centroids and number of their followers to zero initially.
         for (int i = 0; i < numOfClusters; i++) { // Centroids loop
             numOfFollowers[i] = 0;
@@ -90,7 +100,7 @@ public class KMeans {
         }
     }
 
-    public int closestCentroid(int[] vector){
+    public int closestCentroid(double[] vector) {
         int centroid = -1;
         double d = Double.MAX_VALUE;
         for (int i = 0; i < numOfClusters; i++) { // Centroids loop
@@ -104,6 +114,15 @@ public class KMeans {
             }
         }
         return centroid;
+    }
+
+    public ArrayList<Integer> getDocs(double[] matrix){
+        ArrayList<Integer> docIds = new ArrayList<>();
+        int centroid = closestCentroid(matrix);
+        for(int i = 0; i < clusterNum.length; i++)
+            if(clusterNum[i] == centroid)
+                docIds.add(i);
+        return docIds;
     }
 
 }
