@@ -18,7 +18,7 @@ public class SaeidEngine {
     private ArrayList<IndexInfo> invertedIndexIndex;
     private ArrayList<ArrayList<IndexInfo>> invertedIndex;
 
-    private PersianStopWords persianStopWords;
+    private StopWords stopWords;
     private KMeans clusters;
 
     private double[][] weightMatrix;
@@ -81,7 +81,7 @@ public class SaeidEngine {
         invertedIndex = new ArrayList<>();
         invertedIndexIndex = new ArrayList<>();
 
-        persianStopWords = new PersianStopWords();
+        stopWords = new StopWords(StopWords.PERSIAN);
     }
 
     public void addDoc(String doc, int docId, int documentClass) throws Exception {
@@ -94,7 +94,7 @@ public class SaeidEngine {
         ArrayList<IndexInfo> iis = new ArrayList<>();
         index.add(iis);
         for (String word : words) {
-            if (persianStopWords.isStopWord(word))
+            if (stopWords.isStopWord(word))
                 continue;
             Integer wordId = wordDictionary.getId(word);
             // Add to dictionary if it doesn't exist.
@@ -184,7 +184,7 @@ public class SaeidEngine {
 
         double[] vector = new double[invertedIndexIndex.size()];
         for (String word : words) {
-            if (persianStopWords.isStopWord(word))
+            if (stopWords.isStopWord(word))
                 continue;
             int wordIndex = findIndex(invertedIndexIndex, wordDictionary.getId(word));
             if (wordIndex != -1) {

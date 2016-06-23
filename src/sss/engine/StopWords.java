@@ -5,6 +5,12 @@ import java.util.*;
 
 public class StopWords {
 
+    public static final int PERSIAN = 0;
+    public static final int ENGLISH = 1;
+
+    private static final String PERSIAN_ADDRESS = ".\\files\\PSW.txt";
+    private static final String ENGLISH_ADDRESS = ".\\files\\ESW.txt";
+
     /*
     public static final int M_HASH_SET = 0;
     public static final int M_TREE_SET = 1;
@@ -27,29 +33,9 @@ public class StopWords {
     public static void main(String[] args) {
         for (int i = 0; i < 5; i++) {
 
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new FileReader(".\\files\\PSW.txt"));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            StopWords psw = new StopWords();
-            //(M_HASH_SET);
-
             long start = System.currentTimeMillis();
-            int num = 0;
-            try {
-                assert br != null;
-                while (br.ready()) {
-                    num++;
-                    String str = br.readLine();
-                    psw.addStopWord(str);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println(num);
+            StopWords psw = new StopWords(PERSIAN);
+            //(M_HASH_SET);
 
 //        psw.printAll();
 
@@ -86,7 +72,7 @@ public class StopWords {
         }
     }
 
-    public StopWords() {
+    public StopWords(int language) {
         //(int mode) {
         /*
         this.mode = mode;
@@ -115,6 +101,33 @@ public class StopWords {
 
         rand = new Random();
         */
+
+        // Added later
+
+        BufferedReader br = null;
+        try {
+            switch (language) {
+                case PERSIAN:
+                    br = new BufferedReader(new FileReader(PERSIAN_ADDRESS));
+                    break;
+                case ENGLISH:
+                    br = new BufferedReader(new FileReader(ENGLISH_ADDRESS));
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            assert br != null;
+            while (br.ready()) {
+                String str = br.readLine();
+                addStopWord(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean addStopWord(String stopWord) {
