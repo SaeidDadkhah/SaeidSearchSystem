@@ -13,12 +13,14 @@ public class SSS {
     public static final int MODE_INDEX = 1;
     public static final int MODE_SEARCH = 2;
 
-    public static final int MIN_DOC_LENGTH = 10;
     public static final int MAX_HITS = 10;
 
     public static void main(String[] args) {
         try {
-            new SSS(MODE_INDEX, "files/Sample.txt");
+            if (args.length == 0)
+                new SSS(MODE_INDEX, "files/Sample.txt");
+            else if (args.length == 1)
+                new SSS(MODE_INDEX, args[0]);
 //            new SSS(MODE_LUCENE, "./files/comp.sys.ibm.pc.hardware");
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,16 +29,10 @@ public class SSS {
 
     public SSS(int mode, String fileAddress) throws Exception {
         SplashPage sp = new SplashPage(500);
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         SSS_Interface sss_interface = new SSS_Interface(fileAddress, mode);
         sss_interface.addDoc();
         sss_interface.finishIndexing();
         sp.closeSP();
-//        SSS_GUI spss_gui =
         new SSS_GUI(sss_interface);
     }
 
