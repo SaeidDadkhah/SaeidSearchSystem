@@ -11,17 +11,24 @@ import java.util.Set;
  */
 public class SaeidEngine {
 
+    // External classes
+    private StopWords stopWords;
+    private org.tartarus.snowball.ext.englishStemmer englishStemmer;
+    private KMeans clusters;
+    private NaïveBayesClassifier naïveBayesClassifier;
+
+    // Index and class lists
     private Dictionary wordDictionary;
     private ArrayList<IndexInfo> indexIndex;
-    private ArrayList<ArrayList<IndexInfo>> index;
     private ArrayList<Integer> documentClass;
+    private ArrayList<ArrayList<IndexInfo>> index;
     private ArrayList<IndexInfo> invertedIndexIndex;
     private ArrayList<ArrayList<IndexInfo>> invertedIndex;
 
-    private StopWords stopWords;
-    private KMeans clusters;
-
+    // Weight matrix
     private double[][] weightMatrix;
+
+    // Mode
     private int mode;
 
     @SuppressWarnings("ConstantConditions")
@@ -33,8 +40,8 @@ public class SaeidEngine {
 
             System.out.println("===========((Adding docs))===========");
             try {
-                saeidEngine.addDoc("hello! my name is saeid! :)", 1, 1);
-                saeidEngine.addDoc("hi! his name is mostafa! :(", 2, 1);
+                saeidEngine.addDoc("hello saeid! saeid my name is saeid! :)", 1, 1);
+                saeidEngine.addDoc("hi saeid! his name is mostafa! :(", 2, 1);
                 saeidEngine.addDoc("hello! his name is sajjad! :|", 3, 1);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -63,8 +70,23 @@ public class SaeidEngine {
                 System.out.println(i + ": " + res.get(i));
         } else if (mode == SSS.MODE_INDEX_20_NEWS_GROUPS) {
             System.out.println("===========((sss.SaeidEngine Index one file mode test))===========");
-            SaeidEngine saeidEngine = new SaeidEngine(SSS.MODE_INDEX_ONE_FILE);
+            SaeidEngine saeidEngine = new SaeidEngine(SSS.MODE_INDEX_20_NEWS_GROUPS);
 
+            System.out.println("===========((Adding docs))===========");
+            try {
+                saeidEngine.addDoc("hello saeid! my saeid is saeid name saeid! :)", 1, 0);
+                saeidEngine.addDoc("hi saeid! his name is mostafa! :(", 2, 0);
+                saeidEngine.addDoc("hello! his is sajjad! :|", 3, 0);
+                saeidEngine.addDoc("hi hello sajjad mostafa! :|", 7, 0);
+
+                saeidEngine.addDoc("computers works well computers! :| computers are computers, they compute!", 4, 1);
+                saeidEngine.addDoc("computers enjoy well, computers never suck", 5, 1);
+                saeidEngine.addDoc("computers works bugy", 6, 1);
+
+                saeidEngine.classifying(2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -81,11 +103,21 @@ public class SaeidEngine {
         invertedIndex = new ArrayList<>();
         invertedIndexIndex = new ArrayList<>();
 
-        stopWords = new StopWords(StopWords.PERSIAN);
+        switch (mode) {
+            case SSS.MODE_INDEX_ONE_FILE:
+                stopWords = new StopWords(StopWords.PERSIAN);
+                break;
+            case SSS.MODE_INDEX_20_NEWS_GROUPS:
+                stopWords = new StopWords(StopWords.ENGLISH);
+                englishStemmer = new org.tartarus.snowball.ext.englishStemmer();
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     public void addDoc(String doc, int docId, int documentClass) throws Exception {
-        if (mode != SSS.MODE_INDEX_ONE_FILE)
+        if (mode != SSS.MODE_INDEX_ONE_FILE && mode != SSS.MODE_INDEX_20_NEWS_GROUPS)
             throw new Exception("You are not currently in index mode.");
         String[] words = doc.split("\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+");
 
@@ -94,6 +126,13 @@ public class SaeidEngine {
         ArrayList<IndexInfo> iis = new ArrayList<>();
         index.add(iis);
         for (String word : words) {
+            // Stemming
+            if (mode == SSS.MODE_INDEX_20_NEWS_GROUPS) {
+                englishStemmer.setCurrent(word);
+                englishStemmer.stem();
+                word = englishStemmer.getCurrent();
+            }
+            // Ignore if stop word
             if (stopWords.isStopWord(word))
                 continue;
             Integer wordId = wordDictionary.getId(word);
@@ -175,6 +214,21 @@ public class SaeidEngine {
         clusters = new KMeans(weightMatrix, (int) Math.sqrt(index.size()), 10);
     }
 
+    private void classifying(int numOfClasses) {
+        int[][] matrix = new int[index.size()][invertedIndex.size()];
+        int[] numOfWords = new int[invertedIndex.size()];
+        for (String k : wordDictionary.keySet()) {
+            for (int j = 0; j < index.size(); j++) {
+                int wordId = wordDictionary.getId(k);
+                int wordIndexInDoc = findIndex(index.get(j), wordId);
+                if (wordIndexInDoc == -1)
+                    continue;
+                matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
+            }
+        }
+        naïveBayesClassifier = new NaïveBayesClassifier(matrix, documentClass, numOfClasses);
+    }
+
     public ArrayList<Integer> search(String query) throws Exception {
         if (mode != SSS.MODE_SEARCH)
             throw new Exception("You are not currently in search mode.");
@@ -227,4 +281,5 @@ public class SaeidEngine {
     public void setMode(int mode) {
         this.mode = mode;
     }
+
 }
