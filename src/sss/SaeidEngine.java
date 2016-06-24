@@ -11,6 +11,9 @@ import java.util.Set;
  */
 public class SaeidEngine {
 
+    public static final String PERSIAN_DELIMITER = "\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+";
+    public static final String ENGLISH_DELIMITER = "\\s+|,\\s*|\\.\\s*";
+
     // External classes
     private StopWords stopWords;
     private org.tartarus.snowball.ext.englishStemmer englishStemmer;
@@ -83,7 +86,11 @@ public class SaeidEngine {
                 saeidEngine.addDoc("computers enjoy well, computers never suck", 5, 1);
                 saeidEngine.addDoc("computers works bugy", 6, 1);
 
-                saeidEngine.classifying(2);
+                saeidEngine.trainClassifier(2);
+                System.out.println(saeidEngine.classify("saeiding"));
+                System.out.println(saeidEngine.classify("saeided"));
+                System.out.println(saeidEngine.classify("computing"));
+                System.out.println(saeidEngine.classify("work"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,7 +126,7 @@ public class SaeidEngine {
     public void addDoc(String doc, int docId, int documentClass) throws Exception {
         if (mode != SSS.MODE_INDEX_ONE_FILE && mode != SSS.MODE_INDEX_20_NEWS_GROUPS)
             throw new Exception("You are not currently in index mode.");
-        String[] words = doc.split("\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+");
+        String[] words = doc.split(PERSIAN_DELIMITER);
 
         indexIndex.add(new IndexInfo(docId, words.length));
         this.documentClass.add(documentClass);
@@ -214,9 +221,8 @@ public class SaeidEngine {
         clusters = new KMeans(weightMatrix, (int) Math.sqrt(index.size()), 10);
     }
 
-    private void classifying(int numOfClasses) {
+    private void trainClassifier(int numOfClasses) {
         int[][] matrix = new int[index.size()][invertedIndex.size()];
-        int[] numOfWords = new int[invertedIndex.size()];
         for (String k : wordDictionary.keySet()) {
             for (int j = 0; j < index.size(); j++) {
                 int wordId = wordDictionary.getId(k);
@@ -229,15 +235,18 @@ public class SaeidEngine {
         naïveBayesClassifier = new NaïveBayesClassifier(matrix, documentClass, numOfClasses);
     }
 
-    public ArrayList<Integer> search(String query) throws Exception {
-        if (mode != SSS.MODE_SEARCH)
-            throw new Exception("You are not currently in search mode.");
+    public int classify(String doc) {
+        return naïveBayesClassifier.classify(vectorMaker(doc));
+    }
 
-        // Making vector
-        String[] words = query.split("\\s+|,\\s*|\\.\\s*");
+    private int[] vectorMaker(String string) {
+        String[] words = string.split(ENGLISH_DELIMITER);
 
-        double[] vector = new double[invertedIndexIndex.size()];
+        int[] vector = new int[invertedIndexIndex.size()];
         for (String word : words) {
+            englishStemmer.setCurrent(word);
+            englishStemmer.stem();
+            word = englishStemmer.getCurrent();
             if (stopWords.isStopWord(word))
                 continue;
             int wordIndex = findIndex(invertedIndexIndex, wordDictionary.getId(word));
@@ -245,6 +254,17 @@ public class SaeidEngine {
                 vector[wordIndex] += 1;
             }
         }
+        return vector;
+    }
+
+    public ArrayList<Integer> search(String query) throws Exception {
+        if (mode != SSS.MODE_SEARCH)
+            throw new Exception("You are not currently in search mode.");
+
+        int[] iVector = vectorMaker(query);
+        double[] vector = new double[iVector.length];
+        for (int i = 0; i < iVector.length; i++)
+            vector[i] = iVector[i];
 
         ArrayList<Integer> indices = clusters.getDocs(vector);
 
