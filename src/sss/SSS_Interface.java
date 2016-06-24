@@ -99,8 +99,8 @@ public class SSS_Interface {
                 return;
             }
             System.out.println("docs#: " + nOfDocs);
-            sSS_interface.finishIndexing();
-            System.out.println("===========((Searching))===========");
+            sSS_interface.trainClassifier();
+            System.out.println("End of classifying");
         }
     }
 
@@ -269,11 +269,17 @@ public class SSS_Interface {
                 documentClass = documentClass * tmp;
             }
             int res = 0;
+            int counter = 0;
             for (File f : subFiles) {
+                counter++;
+                if (counter > 100)
+                    break;
+
+                res += addDocSaeid20NewsGroups(f, documentClass);
                 if (f.isDirectory())
                     documentClass++;
-                res += addDocSaeid20NewsGroups(f, documentClass);
             }
+            System.out.println("folder");
             return res;
         }
 
@@ -379,6 +385,11 @@ public class SSS_Interface {
 
     private int getRecord(int id) {
         return id % ((int) Math.pow(10, RECORD_DIGITS_IN_ID));
+    }
+
+    public void trainClassifier() {
+        if (mode == SSS.MODE_INDEX_20_NEWS_GROUPS)
+            saeidEngine.trainClassifier(20, 0.7);
     }
 
 }

@@ -12,20 +12,21 @@ public class NaïveBayesClassifier {
     double[][] condProb;
     double[] prior;
 
-    public NaïveBayesClassifier(int[][] matrix, ArrayList<Integer> documentClass, int numOfClasses) {
+    public NaïveBayesClassifier(int[][] matrix, ArrayList<Integer> documentClasses, int numOfClasses) {
         int[][] tct = new int[matrix[0].length][numOfClasses];
         int[] sigmaTCT = new int[numOfClasses];
         condProb = new double[matrix[0].length][numOfClasses];
         prior = new double[numOfClasses];
 
         // Calculating number of docs in each class in prior
-        for (int i = 0; i < documentClass.size(); i++)
-            prior[documentClass.get(i)]++;
+        for (Integer documentClass : documentClasses) prior[documentClass]++;
+        System.out.println("N");
 
         // Calculating prior
         for (int i = 0; i < numOfClasses; i++) {
             prior[i] /= matrix.length;
         }
+        System.out.println("Prior");
 
         // Calculating Tct
         for (int[] arr : tct)
@@ -33,9 +34,10 @@ public class NaïveBayesClassifier {
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
-                tct[j][documentClass.get(i)] += matrix[i][j];
+                tct[j][documentClasses.get(i)] += matrix[i][j];
             }
         }
+        System.out.println("Tct");
 
         // Calculating sigmaTCT
         for (int i = 0; i < tct.length; i++) {
@@ -43,6 +45,7 @@ public class NaïveBayesClassifier {
                 sigmaTCT[j] += tct[i][j];
             }
         }
+        System.out.println("sigmaTct");
 
         // Calculating condProb
         for (int i = 0; i < condProb.length; i++) {
@@ -50,6 +53,7 @@ public class NaïveBayesClassifier {
                 condProb[i][j] = (double) tct[i][j] / sigmaTCT[j];
             }
         }
+        System.out.println("condProb");
     }
 
     public int classify(int[] vector) {

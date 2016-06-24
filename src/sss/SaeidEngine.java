@@ -18,6 +18,7 @@ public class SaeidEngine {
     private StopWords stopWords;
     private org.tartarus.snowball.ext.englishStemmer englishStemmer;
     private KMeans clusters;
+    private ClassifierEvaluator classifierEvaluator;
     private NaïveBayesClassifier naïveBayesClassifier;
 
     // Index and class lists
@@ -79,14 +80,16 @@ public class SaeidEngine {
             try {
                 saeidEngine.addDoc("hello saeid! my saeid is saeid name saeid! :)", 1, 0);
                 saeidEngine.addDoc("hi saeid! his name is mostafa! :(", 2, 0);
-                saeidEngine.addDoc("hello! his is sajjad! :|", 3, 0);
-                saeidEngine.addDoc("hi hello sajjad mostafa! :|", 7, 0);
 
                 saeidEngine.addDoc("computers works well computers! :| computers are computers, they compute!", 4, 1);
                 saeidEngine.addDoc("computers enjoy well, computers never suck", 5, 1);
+
+                saeidEngine.addDoc("hello! his is sajjad! :|", 3, 0);
+                saeidEngine.addDoc("hi hello sajjad mostafa! :|", 7, 0);
+
                 saeidEngine.addDoc("computers works bugy", 6, 1);
 
-                saeidEngine.trainClassifier(2);
+                saeidEngine.trainClassifier(2, 0.6);
                 System.out.println(saeidEngine.classify("saeiding"));
                 System.out.println(saeidEngine.classify("saeided"));
                 System.out.println(saeidEngine.classify("computing"));
@@ -221,7 +224,8 @@ public class SaeidEngine {
         clusters = new KMeans(weightMatrix, (int) Math.sqrt(index.size()), 10);
     }
 
-    private void trainClassifier(int numOfClasses) {
+    public void trainClassifier(int numOfClasses, double trainExamplesRatio) {
+        System.out.println("Building matrix");
         int[][] matrix = new int[index.size()][invertedIndex.size()];
         for (String k : wordDictionary.keySet()) {
             for (int j = 0; j < index.size(); j++) {
@@ -232,7 +236,14 @@ public class SaeidEngine {
                 matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
             }
         }
-        naïveBayesClassifier = new NaïveBayesClassifier(matrix, documentClass, numOfClasses);
+        classifierEvaluator = new ClassifierEvaluator(matrix, documentClass, numOfClasses, trainExamplesRatio);
+        for (int i = 0; i < numOfClasses; i++) {
+            System.out.println(i
+                    + ":\n\tP: " + classifierEvaluator.getPrecision(i)
+                    + "\n\tR: " + classifierEvaluator.getRecall(i)
+                    + "\n\tF: " + classifierEvaluator.getF1Score(i));
+        }
+        naïveBayesClassifier = classifierEvaluator.getNaïveBayesClassifier();
     }
 
     public int classify(String doc) {
