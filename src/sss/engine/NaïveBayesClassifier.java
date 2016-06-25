@@ -40,9 +40,9 @@ public class NaïveBayesClassifier {
         System.out.println("Tct");
 
         // Calculating sigmaTCT
-        for (int i = 0; i < tct.length; i++) {
-            for (int j = 0; j < tct[i].length; j++) {
-                sigmaTCT[j] += tct[i][j];
+        for (int[] aTct : tct) {
+            for (int j = 0; j < aTct.length; j++) {
+                sigmaTCT[j] += aTct[j];
             }
         }
         System.out.println("sigmaTct");

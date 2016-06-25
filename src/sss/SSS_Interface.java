@@ -269,17 +269,17 @@ public class SSS_Interface {
                 documentClass = documentClass * tmp;
             }
             int res = 0;
-            int counter = 0;
+//            int counter = 0;
             for (File f : subFiles) {
-                counter++;
-                if (counter > 100)
-                    break;
+//                counter++;
+//                if (counter > 50)
+//                    break;
 
                 res += addDocSaeid20NewsGroups(f, documentClass);
                 if (f.isDirectory())
                     documentClass++;
             }
-            System.out.println("folder");
+            System.out.println(file.getName());
             return res;
         }
 

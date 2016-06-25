@@ -16,6 +16,7 @@ public class ClassifierEvaluator {
     private int[] tp;
     private int[] fp;
     private int[] fn;
+    @SuppressWarnings("FieldCanBeLocal")
     private int[] tn;
 
     public ClassifierEvaluator(int[][] matrix, ArrayList<Integer> documentClasses, int numOfClasses, double trainToTestRatio) {

@@ -3,7 +3,9 @@ package sss;
 import sss.engine.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Saeid Dadkhah on 2016-06-08 12:21 AM.
@@ -11,14 +13,16 @@ import java.util.Set;
  */
 public class SaeidEngine {
 
-    public static final String PERSIAN_DELIMITER = "\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+";
-    public static final String ENGLISH_DELIMITER = "\\s+|,\\s*|\\.\\s*";
+    public static final int NORMALIZER = 20;
+    public static final int WORD_NUM_PER_CLASS = 15;
+
+    private static final String PERSIAN_DELIMITER = "\\s+|,\\s*|\\.\\s*|[(\\p{Punct}|؛|،)\\s]+";
+    private static final String ENGLISH_DELIMITER = "\\s+|,\\s*|\\.\\s*";
 
     // External classes
     private StopWords stopWords;
     private org.tartarus.snowball.ext.englishStemmer englishStemmer;
     private KMeans clusters;
-    private ClassifierEvaluator classifierEvaluator;
     private NaïveBayesClassifier naïveBayesClassifier;
 
     // Index and class lists
@@ -80,13 +84,11 @@ public class SaeidEngine {
             try {
                 saeidEngine.addDoc("hello saeid! my saeid is saeid name saeid! :)", 1, 0);
                 saeidEngine.addDoc("hi saeid! his name is mostafa! :(", 2, 0);
-
-                saeidEngine.addDoc("computers works well computers! :| computers are computers, they compute!", 4, 1);
-                saeidEngine.addDoc("computers enjoy well, computers never suck", 5, 1);
-
                 saeidEngine.addDoc("hello! his is sajjad! :|", 3, 0);
                 saeidEngine.addDoc("hi hello sajjad mostafa! :|", 7, 0);
 
+                saeidEngine.addDoc("computers works well computers! :| computers are computers, they compute!", 4, 1);
+                saeidEngine.addDoc("computers enjoy well, computers never suck", 5, 1);
                 saeidEngine.addDoc("computers works bugy", 6, 1);
 
                 saeidEngine.trainClassifier(2, 0.6);
@@ -225,24 +227,113 @@ public class SaeidEngine {
     }
 
     public void trainClassifier(int numOfClasses, double trainExamplesRatio) {
-        System.out.println("Building matrix");
-        int[][] matrix = new int[index.size()][invertedIndex.size()];
-        for (String k : wordDictionary.keySet()) {
-            for (int j = 0; j < index.size(); j++) {
-                int wordId = wordDictionary.getId(k);
-                int wordIndexInDoc = findIndex(index.get(j), wordId);
-                if (wordIndexInDoc == -1)
-                    continue;
-                matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
+        System.out.println("Scoring features");
+        int[][] frequency = new int[numOfClasses][invertedIndex.size()]; // frequency of words in each class in score
+
+        for (int i = 0; i < indexIndex.size(); i++) {
+            int idx;
+            for (int j = 0; j < index.get(i).size(); j++) {
+                idx = findIndex(invertedIndexIndex, index.get(i).get(j).getId());
+                frequency[documentClass.get(i)][idx] += index.get(i).get(j).getNum();
             }
         }
-        classifierEvaluator = new ClassifierEvaluator(matrix, documentClass, numOfClasses, trainExamplesRatio);
+
+        double[][] score = new double[numOfClasses][invertedIndex.size()];
+        for (int i = 0; i < score.length; i++) {
+            for (int j = 0; j < score[i].length; j++) {
+                if (frequency[i][j] > NORMALIZER)
+                    score[i][j] = ((double) frequency[i][j] * frequency[i][j] / invertedIndexIndex.get(j).getNum());
+                else
+                    score[i][j] = 0;
+            }
+        }
+
+        ArrayList<ArrayList<IndexInfo>> words = new ArrayList<>();
+        ArrayList<ArrayList<Double>> scores = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> frequencies = new ArrayList<>();
+
+        for (int i = 0; i < score.length; i++) {
+            words.add(new ArrayList<>());
+            scores.add(new ArrayList<>());
+            frequencies.add(new ArrayList<>());
+            for (int j = 0; j < score[i].length; j++) {
+                int idx = 0;
+                while (idx < scores.get(i).size()
+                        && (score[i][j] < scores.get(i).get(idx)
+                        || (score[i][j] == scores.get(i).get(idx)
+                        && frequency[i][j] < frequencies.get(i).get(idx)))
+                        && idx < WORD_NUM_PER_CLASS) {
+//                    System.out.println(idx < scores.get(i).size());
+//                    System.out.println(score[i][j] < scores.get(i).get(idx));
+//                    System.out.println(idx < WORD_NUM_PER_CLASS);
+                    idx++;
+                }
+//                System.out.println(idx < scores.get(i).size());
+//                if (idx < scores.get(i).size())
+//                    System.out.println(score[i][j] < scores.get(i).get(idx));
+//                if (idx < scores.get(i).size() && score[i][j] < scores.get(i).get(idx))
+//                    System.out.println(idx < WORD_NUM_PER_CLASS);
+                if (idx < WORD_NUM_PER_CLASS) {
+                    words.get(i).add(idx, invertedIndexIndex.get(j));
+                    scores.get(i).add(idx, score[i][j]);
+                    frequencies.get(i).add(idx, frequency[i][j]);
+                }
+            }
+        }
+
+        System.out.println("Selecting features");
+        HashSet<Integer> selected = new HashSet<>();
+        for (ArrayList<IndexInfo> word : words) {
+            for (int j = 0, k = 0; j < WORD_NUM_PER_CLASS; j++, k++) {
+                //noinspection SuspiciousMethodCalls
+                while (selected.contains(word.get(k)))
+                    k++;
+                selected.add(word.get(k).getId());
+            }
+        }
+
+        words.clear();
+        scores.clear();
+        frequencies.clear();
+        System.gc();
+
+        ArrayList<Integer> selectedWords = selected.stream().collect(Collectors.toCollection(ArrayList::new));
+        /*
+        for (Integer aSelected : selected) {
+            selectedWords.add(aSelected);
+        }
+        */
+
+        System.out.println("Building matrix");
+        int[][] matrix = new int[index.size()][numOfClasses * WORD_NUM_PER_CLASS];
+        for (int i = 0; i < selectedWords.size(); i++) {
+            for (int j = 0; j < index.size(); j++) {
+                int wordIndexInDoc = findIndex(index.get(j), selectedWords.get(i));
+                if (wordIndexInDoc == -1)
+                    matrix[j][i] = 0;
+                else
+                    matrix[j][i] = index.get(j).get(wordIndexInDoc).getNum();
+            }
+        }
+//        for (String k : wordDictionary.keySet()) {
+//            for (int j = 0; j < index.size(); j++) {
+//                int wordId = wordDictionary.getId(k);
+//                int wordIndexInDoc = findIndex(index.get(j), wordId);
+//                if (wordIndexInDoc == -1)
+//                    continue;
+//                matrix[j][findIndex(invertedIndexIndex, wordId)] = index.get(j).get(wordIndexInDoc).getNum();
+//            }
+//        }
+        ClassifierEvaluator classifierEvaluator = new ClassifierEvaluator(matrix, documentClass, numOfClasses, trainExamplesRatio);
+        double s = 0;
         for (int i = 0; i < numOfClasses; i++) {
             System.out.println(i
                     + ":\n\tP: " + classifierEvaluator.getPrecision(i)
                     + "\n\tR: " + classifierEvaluator.getRecall(i)
                     + "\n\tF: " + classifierEvaluator.getF1Score(i));
+            s += classifierEvaluator.getF1Score(i);
         }
+        System.out.println(s);
         naïveBayesClassifier = classifierEvaluator.getNaïveBayesClassifier();
     }
 
@@ -296,10 +387,11 @@ public class SaeidEngine {
         }
 
         // Index to id
-        ArrayList<Integer> result = new ArrayList<>();
+        /*
         for (Integer index : secondIndices)
             result.add(indexIndex.get(index).getId());
-        return result;
+            */
+        return secondIndices.stream().map(index1 -> indexIndex.get(index1).getId()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     private int findIndex(ArrayList<IndexInfo> al, Object o) {
